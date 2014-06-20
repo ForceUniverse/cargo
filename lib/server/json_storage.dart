@@ -60,9 +60,11 @@ class JsonStorage extends Storage {
     dir.list(recursive: true, followLinks: false)
         .listen((FileSystemEntity entity) {
           var path = entity.path;
-          log.info("deleting $path");
-          var file = new File(path);
-          file.deleteSync();
+          if (path.indexOf(".json") > 1) {
+            log.info("deleting $path");
+            var file = new File(path);
+            file.deleteSync();
+          }
         });
   }
   
