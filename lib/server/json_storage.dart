@@ -67,8 +67,7 @@ class JsonStorage extends Storage {
   }
   
   int length() {
-    Directory dir = new Directory(pathToStore);
-    var length = dir.list(recursive: true, followLinks: false).length;
-    return length;
+    // TODO: find good implementation
+    return 0;
   }
 }
