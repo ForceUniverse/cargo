@@ -4,5 +4,6 @@ author: Joris Hermans <hermansj@gmail.com>
 description: A key value, storage library for dart
 homepage: https://github.com/jorishermans/cargo
 dependencies:
+  logging: '>=0.9.0 <0.10.0'
 dev_dependencies:
   unittest: '>=0.9.0 <0.9.1'
