@@ -3,11 +3,16 @@ part of cargo;
 class JsonStorage extends Storage {
   final Logger log = new Logger('JsonStorage');
   String pathToStore;
+
+  List<String> keys = new List<String>();
   
   JsonStorage (String dir) : super._() {
     pathToStore = Platform.script.resolve(dir).toFilePath();
- 
+    _completer = new Completer();
+    
     _exists(pathToStore);
+    
+    _readInKeys();
   }
   
   void _exists(dir) {
@@ -21,12 +26,14 @@ class JsonStorage extends Storage {
     }
   
   dynamic getItem(String key) {
-    var uriKey = new Uri.file(pathToStore).resolve("$key.json");
-    var file = new File(uriKey.toFilePath());
-        
-    if (file.existsSync()) {
-      // need to convert it to json!
-      return JSON.decode(file.readAsStringSync());
+    if (keys.contains(key)) {
+      var uriKey = new Uri.file(pathToStore).resolve("$key.json");
+      var file = new File(uriKey.toFilePath());
+          
+      if (file.existsSync()) {
+        // need to convert it to json!
+        return JSON.decode(file.readAsStringSync());
+      }
     }
     return null;
   }
@@ -35,11 +42,12 @@ class JsonStorage extends Storage {
     var uriKey = new Uri.file(pathToStore).resolve("$key.json");
     var file = new File(uriKey.toFilePath());
     if (file.existsSync()) {
-      _writeFile(file, key, data);
-     } else {
+       _writeFile(file, key, data);
+    } else {
        file.createSync();
        _writeFile(file, key, data);
-     }        
+    }    
+    keys.add(key);
   }
   
   void _writeFile (File file, key, data) {
@@ -69,7 +77,19 @@ class JsonStorage extends Storage {
   }
   
   int length() {
-    // TODO: find good implementation
-    return 0;
+    return keys.length;
+  }
+  
+  void _readInKeys() {
+    Directory dir = new Directory(pathToStore);
+        dir.list(recursive: true, followLinks: false)    
+        .listen((FileSystemEntity entity) {
+              var path = entity.path;
+              if (path.indexOf(".json") > 1) {
+                keys.add(path);
+              }
+            }).onDone(() {
+                _completer.complete();         
+            });
   }
 }

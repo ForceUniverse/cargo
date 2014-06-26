@@ -10,6 +10,14 @@ Just make an instance of Storage.
 
 	Storage storage = new Storage();
 	
+Then you will have an asynchronous method to say that the storage is started
+
+	Storage storage = new Storage(path: "store/");
+  
+  	storage.start().then((_) {
+  		// do storage operations
+  	});
+	
 Add data to the storage.
 
 	storage.setItem("data", {"data": "data"});

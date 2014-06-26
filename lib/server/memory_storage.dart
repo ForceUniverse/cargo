@@ -4,7 +4,10 @@ class MemoryStorage extends Storage {
   
   Map values = new Map();
   
-  MemoryStorage () : super._();
+  MemoryStorage () : super._() {
+    _completer = new Completer();
+    _completer.complete();
+  }
   
   dynamic getItem(String key) {
     return values[key];

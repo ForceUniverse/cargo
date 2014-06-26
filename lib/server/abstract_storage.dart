@@ -2,6 +2,8 @@ part of cargo;
 
 abstract class Storage {
   
+  Completer _completer;
+  
   // For subclasses
   Storage._();
   
@@ -19,4 +21,6 @@ abstract class Storage {
   void removeItem(String key);
   void clear();
   int length();
+  
+  Future start() => _completer.future;
 }
