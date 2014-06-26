@@ -28,7 +28,7 @@ Retrieve data from the storage.
 
 ### Todo's ###
 
-- store json on disk.
+- add a client implementation of storage
 
 ### Contributing ###
  
