@@ -12,7 +12,9 @@ abstract class Cargo extends CargoBase {
         case CargoMode.MEMORY:
           return new MemoryClient();
         case CargoMode.LOCAL:
-          return new LocalstorageBackend();
+          return new LocalstorageBackend(window.localStorage);
+        case CargoMode.SESSION:
+          return new LocalstorageBackend(window.sessionStorage);
         default:
           Logger.root.warning("Error: Unsupported storage backend \"${MODE}\", supported backends on server is: ${CargoMode.MEMORY} and ${CargoMode.LOCAL}");
       }

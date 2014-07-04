@@ -2,9 +2,9 @@ part of cargo_client;
 
 class LocalstorageBackend implements Cargo {
   Completer _completer;
-  Storage values = window.localStorage;
-
-  LocalstorageBackend() {
+  Storage values;
+ 
+  LocalstorageBackend(this.values) {
     _completer = new Completer();
     _completer.complete();
   }
