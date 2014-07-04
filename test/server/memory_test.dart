@@ -3,7 +3,7 @@ import 'package:cargo/cargo_server.dart';
 
 void main() {
   // First tests!
-  Cargo storage = new Cargo(MODE: CARGO_MODE_MEM);
+  Cargo storage = new Cargo(MODE: CargoMode.MEMORY);
 
   storage.start().then((_) {
     test('test basic memory storage', () {
