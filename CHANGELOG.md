@@ -2,6 +2,12 @@
 
 This file contains highlights of what changes on each version of the force package.
 
+#### Pub version 0.2.0 ####
+
+- Add async for getting a value
+- Add operator functions [] and []=
+- Fix some issues on the length parameter
+
 #### Pub version 0.1.0 ####
 
 - Add start method to the storage implementation

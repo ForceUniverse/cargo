@@ -9,8 +9,14 @@ class MemoryStorage extends Storage {
     _completer.complete();
   }
   
-  dynamic getItem(String key) {
+  dynamic getItemSync(String key) {
     return values[key];
+  }
+  
+  Future getItem(String key) {
+    Completer complete = new Completer();  
+    complete.complete(values[key]);
+    return complete.future;
   }
   
   void setItem(String key, data) {

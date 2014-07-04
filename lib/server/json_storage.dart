@@ -6,6 +6,8 @@ class JsonStorage extends Storage {
 
   List<String> keys = new List<String>();
   
+  Map map;
+  
   JsonStorage (String dir) : super._() {
     pathToStore = Platform.script.resolve(dir).toFilePath();
     _completer = new Completer();
@@ -25,7 +27,7 @@ class JsonStorage extends Storage {
       }
     }
   
-  dynamic getItem(String key) {
+  dynamic getItemSync(String key) {
     if (keys.contains(key)) {
       var uriKey = new Uri.file(pathToStore).resolve("$key.json");
       var file = new File(uriKey.toFilePath());
@@ -38,6 +40,24 @@ class JsonStorage extends Storage {
     return null;
   }
   
+  Future getItem(String key) {
+    Completer complete = new Completer();  
+    if (keys.contains(key)) {
+        var uriKey = new Uri.file(pathToStore).resolve("$key.json");
+        var file = new File(uriKey.toFilePath());
+            
+        file.exists().then((bool exist) {
+          // need to convert it to json!
+          file.readAsString().then((String fileValues) {
+              complete.complete(JSON.decode(fileValues));
+          });
+        });
+      } else {
+        complete.complete(); 
+      }
+      return complete.future;
+    }
+  
   void setItem(String key, data) {
     var uriKey = new Uri.file(pathToStore).resolve("$key.json");
     var file = new File(uriKey.toFilePath());
@@ -46,8 +66,10 @@ class JsonStorage extends Storage {
     } else {
        file.createSync();
        _writeFile(file, key, data);
-    }    
-    keys.add(key);
+    }
+    if (!keys.contains(key)) {
+      keys.add(key);
+    }
   }
   
   void _writeFile (File file, key, data) {
@@ -71,9 +93,14 @@ class JsonStorage extends Storage {
           if (path.indexOf(".json") > 1) {
             log.info("deleting $path");
             var file = new File(path);
-            file.deleteSync();
+            try {
+              file.deleteSync();
+            } on Exception catch(e) {         
+              print('Unknown exception: $e');
+            }
           }
         });
+    keys.clear();
   }
   
   int length() {
@@ -85,8 +112,11 @@ class JsonStorage extends Storage {
         dir.list(recursive: true, followLinks: false)    
         .listen((FileSystemEntity entity) {
               var path = entity.path;
-              if (path.indexOf(".json") > 1) {
-                keys.add(path);
+              RegExp exp = new RegExp(r"^\\(.+\\)*(.+)\.(.+)$");
+             
+              if (exp.hasMatch(path) && path.indexOf(".json") > 1) {
+                Match fileName = exp.firstMatch(path);
+                keys.add(fileName.toString());
               }
             }).onDone(() {
                 _completer.complete();         

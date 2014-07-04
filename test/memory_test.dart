@@ -9,7 +9,7 @@ main() {
     test('test basic memory storage', () {
         storage.setItem("data", {"data": "data"});
       
-        var data = storage.getItem("data");
+        var data = storage.getItemSync("data");
         expect(data["data"], "data");
         expect(storage.length(), 1);
     });

@@ -16,11 +16,20 @@ abstract class Storage {
    }
   }
   
-  String getItem(String key);
+  dynamic getItemSync(String key);
+  Future getItem(String key);
   void setItem(String key, data);
   void removeItem(String key);
   void clear();
   int length();
+  
+  void operator []=(String key, value) {
+      setItem(key, value);
+  }
+  dynamic operator [](String key){
+    return getItemSync(key);
+  }
+  
   
   Future start() => _completer.future;
 }
