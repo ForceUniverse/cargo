@@ -8,6 +8,6 @@ import 'dart:async';
 import 'package:cargo/cargo_base.dart';
 
 part 'src/server/cargo.dart';
-part 'src/server/memory_backend.dart';
 part 'src/server/file_backend.dart';
+part 'src/server/memory_backend.dart';
 
