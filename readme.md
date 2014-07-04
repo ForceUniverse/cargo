@@ -8,11 +8,11 @@ It has the same interface as of localstorage.
 
 Just make an instance of Storage.
 
-	Storage storage = new Storage();
+	Cargo storage = new Cargo();
 	
 Then you will have an asynchronous method to say that the storage is started
 
-	Storage storage = new Storage(path: "store/");
+	Cargo storage = new Cargo(MODE: CargoMode.FILE, path: "../store/");
   
   	storage.start().then((_) {
   		// do storage operations
