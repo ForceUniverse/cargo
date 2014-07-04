@@ -1,28 +1,28 @@
 import 'package:unittest/unittest.dart';
-import 'package:cargo/cargo.dart';
+import 'package:cargo/cargo_server.dart';
 
-main() {  
-  // First tests!  
-  Storage storage = new Storage(path: "store/");
-  
+void main() {
+  // First tests!
+  Cargo storage = new Cargo(backend: CARGO_MODE_FILE, path: "store/");
+
   storage.start().then((_) {
-    
     test('test basic json storage', () {
-        storage.clear();  
+        storage.clear();
         storage.setItem("data", {"data": "data"});
-      
+
         var data = storage.getItemSync("data");
         expect(data["data"], "data");
         expect(storage.length(), 1);
     });
-    
-    storage["async"] = {"as": "go"};
+
+    Map asyncData = {"as": "go"};
+    storage["async"] = asyncData;
+
     storage.getItem("async").then((value) {
       test('test async storage', () {
-        expect(value, storage["async"]);
+        expect(value, asyncData);
       });
     });
   });
-  
-  
 }
+
