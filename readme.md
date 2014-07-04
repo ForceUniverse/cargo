@@ -37,7 +37,7 @@ Or like this
 
 ### Todo's ###
 
-- add a client implementation of storage
+- adding data changed events so other classes can listen to it
 
 ### Contributing ###
  
