@@ -1,10 +1,10 @@
 part of cargo_client;
 
-class LocalstorageBackend implements Cargo {
+class LocalstorageBackend extends Cargo {
   Completer _completer;
   Storage values;
  
-  LocalstorageBackend(this.values) {
+  LocalstorageBackend(this.values) : super._() {
     _completer = new Completer();
     _completer.complete();
   }
@@ -21,6 +21,8 @@ class LocalstorageBackend implements Cargo {
 
   void setItem(String key, data) {
     values[key] = data;
+    
+    dispatch(key, data);
   }
 
   void removeItem(String key) {
@@ -33,14 +35,6 @@ class LocalstorageBackend implements Cargo {
 
   int length() {
     return values.length;
-  }
-
-  void operator []=(String key, value) {
-    setItem(key, value);
-  }
-
-  dynamic operator [](String key){
-    return getItemSync(key);
   }
 
   Future start() => _completer.future;

@@ -1,6 +1,7 @@
 part of cargo_server;
 
-abstract class Cargo extends CargoBase {
+abstract class Cargo extends CargoBase with CargoDispatch {
+  Cargo._();
   /// Create a new cargo storage
   factory Cargo({CargoModeHolder MODE: CargoMode.MEMORY, String path: null}) {
     print("Initiating a cargo storage with ${MODE} backend");

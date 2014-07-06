@@ -1,6 +1,6 @@
 part of cargo;
 
-class MemoryImpl implements CargoBase {
+class MemoryImpl extends CargoBase with CargoDispatch {
   Completer _completer;
   Map values = new Map();
 
@@ -21,6 +21,8 @@ class MemoryImpl implements CargoBase {
 
   void setItem(String key, data) {
     values[key] = data;
+    
+    dispatch(key, data);
   }
 
   void removeItem(String key) {
@@ -33,14 +35,6 @@ class MemoryImpl implements CargoBase {
 
   int length() {
     return values.length;
-  }
-
-  void operator []=(String key, value) {
-    setItem(key, value);
-  }
-
-  dynamic operator [](String key){
-    return getItemSync(key);
   }
 
   Future start() => _completer.future;

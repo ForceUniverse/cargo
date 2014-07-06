@@ -1,6 +1,6 @@
 part of cargo_server;
 
-class FileBackend implements Cargo {
+class FileBackend extends Cargo {
   Completer _completer;
   final Logger log = new Logger('JsonStorage');
   String pathToStore;
@@ -9,7 +9,7 @@ class FileBackend implements Cargo {
 
   Map map;
 
-  FileBackend (String dir) {
+  FileBackend (String dir) : super._() {
     pathToStore = Platform.script.resolve(dir).toFilePath();
     _completer = new Completer();
 
@@ -75,6 +75,7 @@ class FileBackend implements Cargo {
     if (!keys.contains(key)) {
       keys.add(key);
     }
+    dispatch(key, data);
   }
 
   void _writeFile (File file, key, data) {
@@ -127,14 +128,6 @@ class FileBackend implements Cargo {
             }).onDone(() {
                 _completer.complete();
             });
-  }
-
-  void operator []=(String key, value) {
-    setItem(key, value);
-  }
-
-  dynamic operator [](String key){
-    return getItemSync(key);
   }
 
   Future start() => _completer.future;

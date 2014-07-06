@@ -34,6 +34,13 @@ Or on a synchronous way.
 Or like this	
 	
 	var data = storage.getItemSync("data");
+	
+Realtime data events are possible as follow.
+Adding events responds immediately to data changes as they occur. 
+  
+  cargo.on("userData", (DataEvent de) {
+  	// add code that needs to happen when userData value is been changed
+  });
 
 ### Todo's ###
 
