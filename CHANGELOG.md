@@ -2,7 +2,13 @@
 
 This file contains highlights of what changes on each version of the force package.
 
-#### Pub version 0.2.0 ####
+#### Pub version 0.3.1 ####
+
+- Adding events responds immediately to data changes as they occur. 
+  By using the method cargo.on("userData", (DataEvent de) {
+  });
+
+#### Pub version 0.3.0 ####
 
 - Changed Storage into Cargo class
 - Client / Server abstraction
