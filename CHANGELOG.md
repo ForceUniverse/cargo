@@ -2,6 +2,10 @@
 
 This file contains highlights of what changes on each version of the force package.
 
+#### Pub version 0.3.2 ####
+
+- Introducing off(key, datachangelistener) and offAll(key) method, to remove the listeners
+
 #### Pub version 0.3.1 ####
 
 - Adding events responds immediately to data changes as they occur. 

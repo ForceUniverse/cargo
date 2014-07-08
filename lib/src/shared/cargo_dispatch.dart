@@ -22,6 +22,16 @@ class CargoDispatch {
     cargoDataChangerList.add(cargoDataChange);
   }
   
+  off(String key, DataChangeListener cargoDataChange) {
+    if (mapping[key]!=null) {
+        mapping[key].remove(cargoDataChange);
+    }
+  }
+  
+  offAll(String key) {
+    mapping.remove(key);
+  }
+   
   dispatch(String key, value) {
     if (mapping[key]!=null) {
       List<DataChangeListener> cargoDataChangerList = mapping[key];
