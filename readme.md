@@ -38,13 +38,17 @@ Or like this
 Realtime data events are possible as follow.
 Adding events responds immediately to data changes as they occur. 
   
-  cargo.on("userData", (DataEvent de) {
-  	// add code that needs to happen when userData value is been changed
-  });
+	cargo.on("userData", (DataEvent de) {
+	  	// add code that needs to happen when userData value is been changed
+	});
 
-### Todo's ###
+You can also turn the event off!
 
-- adding data changed events so other classes can listen to it
+	cargo.off("userData", dataChangeListener);
+
+Or remove all the listeners
+
+	cargo.offAll("userData");
 
 ### Contributing ###
  
