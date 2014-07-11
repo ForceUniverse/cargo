@@ -54,3 +54,7 @@ Or remove all the listeners
  
 If you found a bug, just create a new issue or even better fork and issue a
 pull request with you fix.
+
+### Join our discussion group ###
+
+[Google group](https://groups.google.com/forum/#!forum/dart-force)
