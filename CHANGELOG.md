@@ -2,6 +2,10 @@
 
 This file contains highlights of what changes on each version of the force package.
 
+#### Pub version 0.3.2+1 ####
+
+- Small improvement in reading out a directory.
+
 #### Pub version 0.3.2 ####
 
 - Introducing off(key, datachangelistener) and offAll(key) method, to remove the listeners

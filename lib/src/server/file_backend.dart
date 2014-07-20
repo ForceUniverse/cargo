@@ -119,10 +119,10 @@ class FileBackend extends Cargo {
         dir.list(recursive: true, followLinks: false)
         .listen((FileSystemEntity entity) {
               var path = entity.path;
-              RegExp exp = new RegExp(r"^\\(.+\\)*(.+)\.(.+)$");
-
-              if (exp.hasMatch(path) && path.indexOf(".json") > 1) {
-                Match fileName = exp.firstMatch(path);
+              
+              if (path.indexOf(".json") > 1) {
+                var fileName = path.split('\\').last; 
+                fileName = fileName.replaceAll(".json", '');
                 keys.add(fileName.toString());
               }
             }).onDone(() {
