@@ -8,7 +8,7 @@ abstract class Cargo extends CargoBase with CargoDispatch {
     
     switch(MODE) {
       case CargoMode.MEMORY:
-        return new MemoryBackend();
+        return new MemoryCargo();
       case CargoMode.FILE:
         return new FileBackend(path);
       default:

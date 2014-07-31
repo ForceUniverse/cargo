@@ -1,10 +1,10 @@
 part of cargo_client;
 
-class LocalstorageBackend extends Cargo {
+class LocalstorageCargo extends Cargo {
   Completer _completer;
   Storage values;
  
-  LocalstorageBackend(this.values) : super._() {
+  LocalstorageCargo(this.values) : super._() {
     _completer = new Completer();
     _completer.complete();
   }

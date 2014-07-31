@@ -49,6 +49,20 @@ You can also turn the event off!
 Or remove all the listeners
 
 	cargo.offAll("userData");
+	
+These are the modes that you can use:
+
+Serverside:
+
+	CargoMode.MEMORY
+  	CargoMode.FILE
+
+Clientside:
+
+	CargoMode.MEMORY
+  	CargoMode.INDEXDB
+  	CargoMode.LOCAL
+  	CargoMode.SESSION
 
 ### Contributing ###
  

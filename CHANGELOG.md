@@ -2,6 +2,10 @@
 
 This file contains highlights of what changes on each version of the force package.
 
+#### Pub version 0.3.3 ####
+
+- Add the implementation of IndexDb as an option
+
 #### Pub version 0.3.2+1 ####
 
 - Small improvement in reading out a directory.
