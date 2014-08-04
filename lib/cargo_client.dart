@@ -3,6 +3,7 @@ library cargo_client;
 import 'package:logging/logging.dart' show Logger, Level, LogRecord;
 import 'dart:html';
 import 'dart:async';
+import 'dart:convert';
 import 'dart:indexed_db';
 
 import 'package:cargo/cargo_base.dart';

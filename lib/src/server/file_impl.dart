@@ -77,6 +77,24 @@ class FileBackend extends Cargo {
     }
     dispatch(key, data);
   }
+  
+  void add(String key, data) {
+       List list = new List(); 
+       if (keys.contains(key)) {
+         Object obj = getItem(key).then((obj) {
+           if (obj is List) {
+              list = obj;
+              _add(list, key, data);
+           }
+         });
+       }
+   }
+     
+   void _add(List list, String key, data) {
+     list.add(data);
+
+     setItem(key, list);
+   }
 
   void _writeFile (File file, key, data) {
     file.writeAsStringSync(JSON.encode(data));

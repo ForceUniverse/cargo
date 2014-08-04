@@ -24,6 +24,23 @@ class MemoryImpl extends CargoBase with CargoDispatch {
     
     dispatch(key, data);
   }
+  
+  void add(String key, data) {
+    List list = new List(); 
+    if (values.containsKey(key)) {
+      if (values[key] is List) {
+        list = values[key];
+      }
+    }
+    _add(list, key, data);
+   }
+  
+  void _add(List list, String key, data) {
+      list.add(data);
+      
+      dispatch(key, list);
+      values[key] = list;
+  }
 
   void removeItem(String key) {
     values.remove(key);

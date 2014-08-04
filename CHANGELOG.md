@@ -2,6 +2,11 @@
 
 This file contains highlights of what changes on each version of the force package.
 
+#### Pub version 0.3.4 ####
+
+- Add the method, 'add' to cargo, so you can add data to a key in a list. This can be handy if you want to collect data.
+- Improve the working of localstorage, encode and decode objects.
+
 #### Pub version 0.3.3 ####
 
 - Add the implementation of IndexDb as an option

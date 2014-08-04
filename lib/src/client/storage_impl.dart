@@ -10,19 +10,36 @@ class LocalstorageCargo extends Cargo {
   }
 
   dynamic getItemSync(String key) {
-    return values[key];
+    return JSON.decode(values[key]);
   }
 
   Future getItem(String key) {
     Completer complete = new Completer();
-    complete.complete(values[key]);
+    complete.complete(JSON.decode(values[key]));
     return complete.future;
   }
 
   void setItem(String key, data) {
-    values[key] = data;
+    values[key] = JSON.encode(data);
     
     dispatch(key, data);
+  }
+  
+  void add(String key, data) {
+      List list = new List(); 
+      if (values.containsKey(key)) {
+        Object obj = JSON.decode(values[key]);
+        if (obj is List) {
+          list = JSON.decode(values[key]);
+        }
+      }
+      _add(list, key, data);
+  }
+    
+  void _add(List list, String key, data) {
+    list.add(data);
+
+    setItem(key, list);
   }
 
   void removeItem(String key) {

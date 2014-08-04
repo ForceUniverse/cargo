@@ -20,15 +20,41 @@ class IndexDbCargo extends Cargo {
   }
 
   Future getItem(String key) {
-    return _doCommand((ObjectStore store) => store.delete(key));
+    return _doCommand((ObjectStore store) => store.getObject(key),
+    'readonly');
   }
 
   void setItem(String key, data) {
     _doCommand((ObjectStore store) {
-       return store.put(key, data);
+      dispatch(key, data); 
+      return store.put(key, data);
     });
     
-    dispatch(key, data);
+   
+  }
+  
+  void add(String key, data) {
+    
+    _doCommand((ObjectStore store) {
+      
+      store.getObject(key).then((obj) {
+        if (obj is List) {
+          List list = obj;
+          list.add(data);
+          
+          dispatch(key, list);
+          return store.put(key, list);
+        }
+        
+      }, onError: (e) {
+        List list = new List();
+        list.add(data);
+                  
+        dispatch(key, list);
+        return store.put(key, list);
+      }); 
+    });  
+   
   }
 
   void removeItem(String key) {

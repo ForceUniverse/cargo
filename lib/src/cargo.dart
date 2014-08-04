@@ -11,6 +11,9 @@ abstract class CargoBase {
 
   /// Set/update an item synchronously
   void setItem(String key, data);
+  
+  /// Add item synchronously
+  void add(String key, data);
 
   /// Remove/delete an item synchronously
   void removeItem(String key);
