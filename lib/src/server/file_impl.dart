@@ -87,6 +87,8 @@ class FileBackend extends Cargo {
               _add(list, key, data);
            }
          });
+       } else {
+         _add(list, key, data);
        }
    }
      

@@ -2,6 +2,10 @@
 
 This file contains highlights of what changes on each version of the force package.
 
+#### Pub version 0.3.4+1 ####
+
+- Solve issue with add, when the key don't exist!
+
 #### Pub version 0.3.4 ####
 
 - Add the method, 'add' to cargo, so you can add data to a key in a list. This can be handy if you want to collect data.
