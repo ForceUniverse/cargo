@@ -1,6 +1,6 @@
 ### Changelog ###
 
-This file contains highlights of what changes on each version of the force package.
+This file contains highlights of what changes on each version of the cargo package.
 
 #### Pub version 0.3.4+1 ####
 
