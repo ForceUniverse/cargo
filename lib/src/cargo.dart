@@ -4,10 +4,10 @@ abstract class CargoBase {
   Completer _completer;
 
   /// Get an item synchronously
-  dynamic getItemSync(String key);
+  dynamic getItemSync(String key, {defaultValue});
 
   /// Get an item asynchronously
-  Future getItem(String key);
+  Future getItem(String key, {defaultValue});
 
   /// Set/update an item synchronously
   void setItem(String key, data);

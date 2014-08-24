@@ -9,13 +9,16 @@ class MemoryImpl extends CargoBase with CargoDispatch {
     _completer.complete();
   }
 
-  dynamic getItemSync(String key) {
+  dynamic getItemSync(String key, {defaultValue}) {
+    if (values[key]==null && defaultValue!=null) {
+      values[key]=defaultValue;
+    }
     return values[key];
   }
 
-  Future getItem(String key) {
+  Future getItem(String key, {defaultValue}) {
     Completer complete = new Completer();
-    complete.complete(values[key]);
+    complete.complete(getItemSync(key, defaultValue: defaultValue));
     return complete.future;
   }
 

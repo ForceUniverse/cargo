@@ -28,7 +28,7 @@ class FileBackend extends Cargo {
     }
   }
 
-  dynamic getItemSync(String key) {
+  dynamic getItemSync(String key,  {defaultValue}) {
     if (keys.contains(key)) {
       var uriKey = new Uri.file(pathToStore).resolve("$key.json");
       var file = new File(uriKey.toFilePath());
@@ -38,11 +38,11 @@ class FileBackend extends Cargo {
         return JSON.decode(file.readAsStringSync());
       }
     }
-
-    return null;
+    _setDefaultValue(key, defaultValue);
+    return defaultValue;
   }
 
-  Future getItem(String key) {
+  Future getItem(String key,  {defaultValue}) {
     Completer complete = new Completer();
 
     if (keys.contains(key)) {
@@ -51,15 +51,27 @@ class FileBackend extends Cargo {
 
       file.exists().then((bool exist) {
         // Need to convert it to json!
-        file.readAsString().then((String fileValues) {
-          complete.complete(JSON.decode(fileValues));
-        });
+        if (exist) {
+          file.readAsString().then((String fileValues) {
+            complete.complete(JSON.decode(fileValues));
+          });
+        } else {
+          _setDefaultValue(key, defaultValue);
+          complete.complete(defaultValue);
+        }
       });
     } else {
-      complete.complete();
+      _setDefaultValue(key, defaultValue);
+      complete.complete(defaultValue);
     }
 
     return complete.future;
+  }
+  
+  void _setDefaultValue(String key, defaultValue) {
+    if (defaultValue!=null) {
+        setItem(key, defaultValue); 
+    }
   }
 
   void setItem(String key, data) {

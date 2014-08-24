@@ -63,6 +63,10 @@ Clientside:
   	CargoMode.INDEXDB
   	CargoMode.LOCAL
   	CargoMode.SESSION
+  	
+You can also provide a defaultValue when you want to retrieve a value, but the value is not yet present.
+
+	cargo.getItem("key", defaultValue: new List());
 
 ### Contributing ###
  

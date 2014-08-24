@@ -2,6 +2,10 @@
 
 This file contains highlights of what changes on each version of the cargo package.
 
+#### Pub version 0.3.5 ####
+
+- Add an optional parameter defaultValue when you want to get an item out of the storage implementation.
+
 #### Pub version 0.3.4+1 ####
 
 - Solve issue with add, when the key don't exist!

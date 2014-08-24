@@ -15,12 +15,20 @@ class IndexDbCargo extends Cargo {
   
   IndexDbCargo(this.dbName, this.storeName) : super._();
 
-  dynamic getItemSync(String key) {
-    throw new UnsupportedError('IndexedDB is not supporting synchronous retrieval of data');
+  dynamic getItemSync(String key, {defaultValue}) {
+    throw new UnsupportedError('IndexedDB is not supporting synchronous retrieval of data, we will add this feature when await key is available in Dart');
   }
 
-  Future getItem(String key) {
-    return _doCommand((ObjectStore store) => store.getObject(key),
+  Future getItem(String key, {defaultValue}) {
+    return _doCommand((ObjectStore store) { 
+      var obj = store.getObject(key);
+      if (obj==null) {
+        if (defaultValue!=null) {
+          setItem(key, defaultValue); 
+        }
+        return defaultValue;
+      }
+    },
     'readonly');
   }
 
