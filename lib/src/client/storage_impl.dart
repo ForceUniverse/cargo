@@ -8,17 +8,21 @@ class LocalstorageCargo extends Cargo {
     _completer = new Completer();
     _completer.complete();
   }
-
+  
   dynamic getItemSync(String key, {defaultValue}) {
+     _checkDefault(key, defaultValue: defaultValue);
+     return values[key] is String ? JSON.decode(values[key]) : values[key];
+   }
+  
+  void _checkDefault(String key, {defaultValue}) {
     if (values[key]==null && defaultValue!=null) {
-      values[key] = defaultValue;
+      setItem(key, defaultValue);
     }
-    return JSON.decode(values[key]);
   }
 
   Future getItem(String key, {defaultValue}) {
     Completer complete = new Completer();
-    complete.complete(JSON.decode(getItemSync(key, defaultValue: defaultValue)));
+    complete.complete(getItemSync(key, defaultValue: defaultValue));
     return complete.future;
   }
 
