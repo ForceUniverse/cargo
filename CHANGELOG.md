@@ -2,6 +2,10 @@
 
 This file contains highlights of what changes on each version of the cargo package.
 
+#### Pub version 0.3.5+7 - 0.3.5+8 ####
+
+- Improvement fixes for indexeddb implementation
+
 #### Pub version 0.3.5+2 - 0.3.5+6 ####
 
 - Improvement of the localstorage implementation, fix a bug with retrieving a value of an item.

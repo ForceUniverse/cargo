@@ -85,10 +85,6 @@ class IndexDbCargo extends Cargo {
       var future = requestCommand(store);
       return trans.completed.then((_) => future);
   }
-  
-  void onUpgradeNeeded(VersionChangeEvent) {
-    
-  }
 
   Future start() {
     if (!supported) {
@@ -96,13 +92,15 @@ class IndexDbCargo extends Cargo {
         new UnsupportedError('IndexedDB is not supported on this platform'));
     }
         
-    return window.indexedDB.open(dbName, version: 1, onUpgradeNeeded: onUpgradeNeeded)
+    return window.indexedDB.open(dbName)
         .then((Database db) {
           //print("Newly opened db $dbName has version ${db.version} and stores ${db.objectStoreNames}");
           if (!db.objectStoreNames.contains(storeName)) {
             db.close();
-            //print('Attempting upgrading $storeName from ${db.version}');
-            return window.indexedDB.open(dbName,
+            
+            print('Attempting upgrading $storeName from ${db.version}');
+            
+            return window.indexedDB.open(dbName, version: 1,
               onUpgradeNeeded: (e) {
                 //print('Upgrading db $dbName to ${db.version + 1}');
                 Database d = e.target.result;
