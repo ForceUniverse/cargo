@@ -3,7 +3,7 @@ import 'package:cargo/cargo_server.dart';
 
 void main() {
   // First tests!
-  Cargo storage = new Cargo(MODE: CargoMode.FILE, path: "../store/");
+  Cargo storage = new Cargo(MODE: CargoMode.FILE, conf: { "path" : "../store/"});
 
   storage.start().then((_) {
     test('test basic json storage', () {

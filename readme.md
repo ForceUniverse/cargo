@@ -12,7 +12,7 @@ Just make an instance of Storage.
 	
 Then you will have an asynchronous method to say that the storage is started
 
-	Cargo storage = new Cargo(MODE: CargoMode.FILE, path: "../store/");
+	Cargo storage = new Cargo(MODE: CargoMode.FILE, conf: { "path" : "../store/" });
   
   	storage.start().then((_) {
   		// do storage operations

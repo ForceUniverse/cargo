@@ -2,6 +2,14 @@
 
 This file contains highlights of what changes on each version of the cargo package.
 
+#### Pub version 0.4.0 ####
+
+- Adding a better way of adding configuration data to the right implementation.
+
+So instead of path: ... you will find now conf: ...
+
+	var cargo = new Cargo(MODE: CargoMode.FILE, conf: { "path" : "../store/" });
+
 #### Pub version 0.3.5+7 - 0.3.5+8 ####
 
 - Improvement fixes for indexeddb implementation
