@@ -3,7 +3,7 @@ import 'package:cargo/cargo_server.dart';
 
 void main() {
   // First tests!
-  Cargo storage = new Cargo(MODE: CargoMode.MEMORY);
+  MemoryCargo storage = new Cargo(MODE: CargoMode.MEMORY);
   Cargo fileStorage = new Cargo(MODE: CargoMode.FILE, conf: {"path": "./"});
 
   storage.start().then((_) {
@@ -19,7 +19,7 @@ void main() {
 
     test('test memory save to file', () {
       storage.add("data2", "value");
-      storage.saveToFileStorage(fileStorage);
+      storage.copyTo(fileStorage);
     });
 
     test('test loading from saved memory storage', () => expect(fileStorage.getItemSync("data2"), [["value"]]));

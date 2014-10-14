@@ -6,6 +6,7 @@ This file contains highlights of what changes on each version of the cargo packa
 
 - Adding a copyTo method and an export method.
 - Adding the method exportToFileStorage to the memory impl serverside.
+- Still some work todo in indexDB implementation.
 
 #### Pub version 0.4.0 ####
 
