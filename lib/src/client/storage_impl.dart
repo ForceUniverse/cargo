@@ -61,7 +61,7 @@ class LocalstorageCargo extends Cargo {
     return values.length;
   }
   
-  Map allValues() {
+  Map export() {
     return values;
   } 
 

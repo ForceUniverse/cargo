@@ -32,10 +32,10 @@ abstract class CargoBase {
     return getItemSync(key);
   }
   
-  Map allValues();
+  Map export();
   
   CargoBase copyTo(CargoBase storage) {
-      this.allValues().forEach((key, value) => storage.add(key, value));
+      this.export().forEach((key, value) => storage.add(key, value));
       return storage;
   }
 

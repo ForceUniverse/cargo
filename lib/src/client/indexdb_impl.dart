@@ -7,6 +7,8 @@ class IndexDbCargo extends Cargo {
   bool _isOpen;
   
   int count = 0;
+  
+  List<String> keys = new List<String>();
  
   /// Returns true if IndexedDB is supported on this platform.
   static bool get supported => IdbFactory.supported;
@@ -34,17 +36,15 @@ class IndexDbCargo extends Cargo {
 
   void setItem(String key, data) {
     _doCommand((ObjectStore store) {
-      dispatch(key, data); 
+      dispatch(key, data);
+      this.keys.add(key);
       return store.put(key, data);
     });
-    
    
   }
   
   void add(String key, data) {
-    
     _doCommand((ObjectStore store) {
-      
       store.getObject(key).then((obj) {
         if (obj is List) {
           List list = obj;
@@ -57,8 +57,9 @@ class IndexDbCargo extends Cargo {
       }, onError: (e) {
         List list = new List();
         list.add(data);
-                  
+                
         dispatch(key, list);
+        this.keys.add(key);  
         return store.put(key, list);
       }); 
     });  
@@ -66,11 +67,17 @@ class IndexDbCargo extends Cargo {
   }
 
   void removeItem(String key) {
-    _doCommand((ObjectStore store) => store.delete(key));
+    _doCommand((ObjectStore store) {
+      store.delete(key);
+      this.keys.remove(key);
+    });
   }
 
   void clear() {
-    _doCommand((ObjectStore store) => store.clear());
+    _doCommand((ObjectStore store) { 
+      store.clear();
+      this.keys.clear();
+    });
   }
 
   int length() {
@@ -119,12 +126,13 @@ class IndexDbCargo extends Cargo {
         });
   }
   
-  Map allValues() {
+  Map export() {
      Map values = new Map();
-     // TODO: integrate all values retrieval functionality
+     for (var key in keys) {
+       values[key] = getItemSync(key);
+     }
      return values;
    } 
 
-  
   Database get _db => _databases[dbName];
 }

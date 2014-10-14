@@ -123,7 +123,7 @@ class FileBackend extends Cargo {
     });
   }
   
-  Map allValues() {
+  Map export() {
     Map values = new Map();
     for (var key in keys) {
       values[key] = getItemSync(key);

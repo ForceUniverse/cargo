@@ -2,6 +2,11 @@
 
 This file contains highlights of what changes on each version of the cargo package.
 
+#### Pub version 0.4.1 ####
+
+- Adding a copyTo method and an export method.
+- Adding the method exportToFileStorage to the memory impl serverside.
+
 #### Pub version 0.4.0 ####
 
 - Adding a better way of adding configuration data to the right implementation.

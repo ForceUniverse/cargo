@@ -57,7 +57,7 @@ class MemoryImpl extends CargoBase with CargoDispatch {
     return values.length;
   }
   
-  Map allValues() {
+  Map export() {
     return values;
   } 
 
