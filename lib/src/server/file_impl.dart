@@ -122,6 +122,14 @@ class FileBackend extends Cargo {
       log.info("item $key deleted successfully");
     });
   }
+  
+  Map allValues() {
+    Map values = new Map();
+    for (var key in keys) {
+      values[key] = getItemSync(key);
+    }
+    return values;
+  } 
 
   void clear() {
     Directory dir = new Directory(pathToStore);

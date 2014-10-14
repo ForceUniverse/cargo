@@ -31,6 +31,13 @@ abstract class CargoBase {
   dynamic operator [](String key){
     return getItemSync(key);
   }
+  
+  Map allValues();
+  
+  CargoBase copyTo(CargoBase storage) {
+      this.allValues().forEach((key, value) => storage.add(key, value));
+      return storage;
+  }
 
   Future start() => _completer.future;
 }

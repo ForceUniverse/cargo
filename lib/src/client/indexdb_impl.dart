@@ -119,5 +119,12 @@ class IndexDbCargo extends Cargo {
         });
   }
   
+  Map allValues() {
+     Map values = new Map();
+     // TODO: integrate all values retrieval functionality
+     return values;
+   } 
+
+  
   Database get _db => _databases[dbName];
 }
