@@ -11,7 +11,7 @@ abstract class CargoBase {
 
   /// Set/update an item synchronously
   void setItem(String key, data);
-  
+
   /// Add item synchronously
   void add(String key, data);
 
@@ -28,17 +28,16 @@ abstract class CargoBase {
     setItem(key, value);
   }
 
-  dynamic operator [](String key){
+  dynamic operator [](String key) {
     return getItemSync(key);
   }
-  
+
   Map export();
-  
+
   CargoBase copyTo(CargoBase storage) {
-      this.export().forEach((key, value) => storage.add(key, value));
-      return storage;
+    this.export().forEach((key, value) => storage.add(key, value));
+    return storage;
   }
 
   Future start() => _completer.future;
 }
-

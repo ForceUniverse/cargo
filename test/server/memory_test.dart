@@ -8,9 +8,7 @@ void main() {
 
   storage.start().then((_) {
     test('test basic memory storage', () {
-      storage.setItem("data", {
-        "data": "data"
-      });
+      storage.setItem("data", {"data": "data"});
 
       var data = storage.getItemSync("data");
       expect(data["data"], "data");
