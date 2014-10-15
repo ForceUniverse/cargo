@@ -13,4 +13,3 @@ part 'src/client/storage_impl.dart';
 part 'src/client/memory_impl.dart';
 part 'src/client/cargo_mode.dart';
 part 'src/client/indexdb_impl.dart';
-

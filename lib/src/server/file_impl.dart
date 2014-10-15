@@ -1,6 +1,6 @@
 part of cargo_server;
 
-class FileBackend extends Cargo {
+class FileCargo extends Cargo {
   Completer _completer;
   final Logger log = new Logger('JsonStorage');
   String pathToStore;
@@ -9,7 +9,7 @@ class FileBackend extends Cargo {
 
   Map map;
 
-  FileBackend (String dir) : super._() {
+  FileCargo(String dir) : super._() {
     pathToStore = Platform.script.resolve(dir).toFilePath();
     _completer = new Completer();
 
@@ -28,7 +28,7 @@ class FileBackend extends Cargo {
     }
   }
 
-  dynamic getItemSync(String key,  {defaultValue}) {
+  dynamic getItemSync(String key, {defaultValue}) {
     if (keys.contains(key)) {
       var uriKey = new Uri.file(pathToStore).resolve("$key.json");
       var file = new File(uriKey.toFilePath());
@@ -42,7 +42,7 @@ class FileBackend extends Cargo {
     return defaultValue;
   }
 
-  Future getItem(String key,  {defaultValue}) {
+  Future getItem(String key, {defaultValue}) {
     Completer complete = new Completer();
 
     if (keys.contains(key)) {
@@ -67,10 +67,10 @@ class FileBackend extends Cargo {
 
     return complete.future;
   }
-  
+
   void _setDefaultValue(String key, defaultValue) {
-    if (defaultValue!=null) {
-        setItem(key, defaultValue); 
+    if (defaultValue != null) {
+      setItem(key, defaultValue);
     }
   }
 
@@ -89,28 +89,28 @@ class FileBackend extends Cargo {
     }
     dispatch(key, data);
   }
-  
+
   void add(String key, data) {
-       List list = new List(); 
-       if (keys.contains(key)) {
-         Object obj = getItem(key).then((obj) {
-           if (obj is List) {
-              list = obj;
-              _add(list, key, data);
-           }
-         });
-       } else {
-         _add(list, key, data);
-       }
-   }
-     
-   void _add(List list, String key, data) {
-     list.add(data);
+    List list = new List();
+    if (keys.contains(key)) {
+      Object obj = getItem(key).then((obj) {
+        if (obj is List) {
+          list = obj;
+          _add(list, key, data);
+        }
+      });
+    } else {
+      _add(list, key, data);
+    }
+  }
 
-     setItem(key, list);
-   }
+  void _add(List list, String key, data) {
+    list.add(data);
 
-  void _writeFile (File file, key, data) {
+    setItem(key, list);
+  }
+
+  void _writeFile(File file, key, data) {
     file.writeAsStringSync(JSON.encode(data));
   }
 
@@ -122,31 +122,30 @@ class FileBackend extends Cargo {
       log.info("item $key deleted successfully");
     });
   }
-  
+
   Map export() {
     Map values = new Map();
     for (var key in keys) {
       values[key] = getItemSync(key);
     }
     return values;
-  } 
+  }
 
   void clear() {
     Directory dir = new Directory(pathToStore);
 
-    dir.list(recursive: true, followLinks: false)
-        .listen((FileSystemEntity entity) {
-          var path = entity.path;
-          if (path.indexOf(".json") > 1) {
-            log.info("deleting $path");
-            var file = new File(path);
-            try {
-              file.deleteSync();
-            } on Exception catch(e) {
-              print('Unknown exception: $e');
-            }
-          }
-        });
+    dir.list(recursive: true, followLinks: false).listen((FileSystemEntity entity) {
+      var path = entity.path;
+      if (path.indexOf(".json") > 1) {
+        log.info("deleting $path");
+        var file = new File(path);
+        try {
+          file.deleteSync();
+        } on Exception catch (e) {
+          print('Unknown exception: $e');
+        }
+      }
+    });
     keys.clear();
   }
 
@@ -156,20 +155,18 @@ class FileBackend extends Cargo {
 
   void _readInKeys() {
     Directory dir = new Directory(pathToStore);
-        dir.list(recursive: true, followLinks: false)
-        .listen((FileSystemEntity entity) {
-              var path = entity.path;
-              
-              if (path.indexOf(".json") > 1) {
-                var fileName = path.split('\\').last; 
-                fileName = fileName.replaceAll(".json", '');
-                keys.add(fileName.toString());
-              }
-            }).onDone(() {
-                _completer.complete();
-            });
+    dir.list(recursive: true, followLinks: false).listen((FileSystemEntity entity) {
+      var path = entity.path;
+
+      if (path.indexOf(".json") > 1) {
+        var fileName = path.split('\\').last;
+        fileName = fileName.replaceAll(".json", '');
+        keys.add(fileName.toString());
+      }
+    }).onDone(() {
+      _completer.complete();
+    });
   }
 
   Future start() => _completer.future;
 }
-
