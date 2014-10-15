@@ -1,6 +1,6 @@
 part of cargo_server;
 
-class FileBackend extends Cargo {
+class FileCargo extends Cargo {
   Completer _completer;
   final Logger log = new Logger('JsonStorage');
   String pathToStore;
@@ -9,7 +9,7 @@ class FileBackend extends Cargo {
 
   Map map;
 
-  FileBackend (String dir) : super._() {
+  FileCargo (String dir) : super._() {
     pathToStore = Platform.script.resolve(dir).toFilePath();
     _completer = new Completer();
 

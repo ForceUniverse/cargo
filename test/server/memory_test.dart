@@ -4,7 +4,7 @@ import 'package:cargo/cargo_server.dart';
 void main() {
   // First tests!
   MemoryCargo storage = new Cargo(MODE: CargoMode.MEMORY);
-  Cargo fileStorage = new Cargo(MODE: CargoMode.FILE, conf: {"path": "./"});
+  FileCargo fileStorage = new Cargo(MODE: CargoMode.FILE, conf: {"path": "./"});
 
   storage.start().then((_) {
     test('test basic memory storage', () {
