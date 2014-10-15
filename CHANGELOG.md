@@ -2,6 +2,12 @@
 
 This file contains highlights of what changes on each version of the cargo package.
 
+#### Pub version 0.4.1+1 ####
+
+- Change of directory for temporary data for testing
+- Rename FileBackend to FileCargo
+- Code reformat
+
 #### Pub version 0.4.1 ####
 
 - Adding a copyTo method and an export method.
