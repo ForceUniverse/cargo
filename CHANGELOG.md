@@ -2,6 +2,10 @@
 
 This file contains highlights of what changes on each version of the cargo package.
 
+#### Pub version 0.4.2 ####
+
+- export & exportSync methods
+
 #### Pub version 0.4.1+1 ####
 
 - Change of directory for temporary data for testing

@@ -119,12 +119,25 @@ class IndexDbCargo extends Cargo {
     });
   }
 
-  Map export() {
+  Map exportSync() {
     Map values = new Map();
     for (var key in keys) {
       values[key] = getItemSync(key);
     }
     return values;
+  }
+  
+  Future<Map> export() {
+    Completer complete = new Completer();
+    Map values = new Map();
+    _doCommand((ObjectStore store) {
+          store.openCursor().listen((CursorWithValue cwv) {
+            values[cwv.key] = cwv.value;
+          }).onDone(() {
+            complete.complete(values);
+          });;
+        });
+    return complete.future;
   }
 
   Database get _db => _databases[dbName];

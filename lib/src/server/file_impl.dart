@@ -123,13 +123,35 @@ class FileCargo extends Cargo {
     });
   }
 
-  Map export() {
+  Map exportSync() {
     Map values = new Map();
     for (var key in keys) {
       values[key] = getItemSync(key);
     }
     return values;
   }
+  
+  Future<Map> export() {
+        Completer complete = new Completer();
+        
+        Map values = new Map();
+        
+        Directory dir = new Directory(pathToStore);
+        dir.list(recursive: true, followLinks: false).listen((FileSystemEntity entity) {
+          var path = entity.path;
+
+          if (path.indexOf(".json") > 1) {
+            var fileName = path.split('\\').last;
+            fileName = fileName.replaceAll(".json", '');
+            var key = fileName.toString();
+            
+            values[key] = getItemSync(key);
+          }
+        }).onDone(() {
+          complete.complete(values);
+        });
+        return complete.future;
+    }
 
   void clear() {
     Directory dir = new Directory(pathToStore);

@@ -57,9 +57,15 @@ class MemoryImpl extends CargoBase with CargoDispatch {
     return values.length;
   }
   
-  Map export() {
+  Map exportSync() {
     return values;
   } 
+  
+  Future<Map> export() {
+    Completer complete = new Completer();
+    complete.complete(values);
+    return complete.future;
+  }
 
   Future start() => _completer.future;
 }
