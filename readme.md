@@ -68,6 +68,12 @@ You can also provide a defaultValue when you want to retrieve a value, but the v
 
 	cargo.getItem("key", defaultValue: new List());
 	
+When you want to copy some data from one cargo implentation to another you can use.
+
+	cargo.copyTo(anotherCargoImpl);
+	
+You can also export the data to a map with the functions export and exportSync.
+	
 ### Note ###
 
 IndexDB is not fully functional, we are waiting on the 'await' keyword of dart.
