@@ -70,7 +70,7 @@ You can also provide a defaultValue when you want to retrieve a value, but the v
 	
 ### Note ###
 
-IndexDB is not fully functional, we are waiting on the 'wait' keyword of dart.
+IndexDB is not fully functional, we are waiting on the 'await' keyword of dart.
 
 ### Contributing ###
  
