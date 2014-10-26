@@ -2,6 +2,10 @@
 
 This file contains highlights of what changes on each version of the cargo package.
 
+#### Pub version 0.4.3 ####
+
+- length method returns now Future<int> instead of int, go to an asynchronous implementation.
+
 #### Pub version 0.4.2 ####
 
 - export & exportSync methods

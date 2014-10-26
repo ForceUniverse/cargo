@@ -22,7 +22,7 @@ abstract class CargoBase {
   void clear();
 
   /// Get the total number of items in cargo storage
-  int length();
+  Future<int> length();
 
   void operator []=(String key, value) {
     setItem(key, value);

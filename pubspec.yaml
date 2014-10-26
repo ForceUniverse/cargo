@@ -1,7 +1,7 @@
 name: cargo
-version: 0.4.2
+version: 0.4.3
 author: Joris Hermans <hermansj@gmail.com>
-description: A key value, storage library for dart
+description: A 'key value' storage abstraction library for dart
 homepage: https://github.com/ForceUniverse/cargo
 dependencies:
   logging: '>=0.9.0 <0.10.0'

@@ -57,8 +57,10 @@ class LocalstorageCargo extends Cargo {
     values.clear();
   }
 
-  int length() {
-    return values.length;
+  Future<int> length() {
+     Completer complete = new Completer();
+     complete.complete(values.length);
+     return complete.future;
   }
 
   Map exportSync() {

@@ -79,8 +79,12 @@ class IndexDbCargo extends Cargo {
     });
   }
 
-  int length() {
-    throw new UnsupportedError('IndexedDB is not supporting length retrieval synchronously');
+  Future<int> length() {
+    Future<int> future;
+    _doCommand((ObjectStore store) {
+          future = store.count();
+        });
+    return future;
   }
 
   Future _doCommand(Future requestCommand(ObjectStore store), [String txnMode = 'readwrite']) {

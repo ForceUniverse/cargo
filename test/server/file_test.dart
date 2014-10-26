@@ -12,7 +12,9 @@ void main() {
 
       var data = storage.getItemSync("data");
       expect(data["data"], "data");
-      expect(storage.length(), 1);
+      storage.length().then((int count) {
+              expect(count, 1);
+            });
     });
 
     Map asyncData = {"as": "go"};

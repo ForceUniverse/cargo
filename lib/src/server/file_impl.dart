@@ -171,9 +171,17 @@ class FileCargo extends Cargo {
     keys.clear();
   }
 
-  int length() {
-    return keys.length;
-  }
+  Future<int> length() {
+      Completer complete = new Completer();
+      int count = 0;
+      Directory dir = new Directory(pathToStore);
+      dir.list(recursive: true, followLinks: false).listen((FileSystemEntity entity) {
+         count++;
+      }).onDone(() {
+         complete.complete(count);
+      });
+      return complete.future;
+    }
 
   void _readInKeys() {
     Directory dir = new Directory(pathToStore);

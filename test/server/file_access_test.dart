@@ -11,7 +11,9 @@ void main() {
       storage["someValue"] = {"value": "go"};
 
       expect(storage["someValue"], {"value": "go"});
-      expect(storage.length(), 1);
+      storage.length().then((int count) {
+              expect(count, 1);
+      });
     });
   });
 }
