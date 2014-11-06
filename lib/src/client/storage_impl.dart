@@ -21,9 +21,7 @@ class LocalstorageCargo extends Cargo {
   }
 
   Future getItem(String key, {defaultValue}) {
-    Completer complete = new Completer();
-    complete.complete(getItemSync(key, defaultValue: defaultValue));
-    return complete.future;
+    return new Future.sync(getItemSync(key, defaultValue: defaultValue));
   }
 
   void setItem(String key, data) {
@@ -58,9 +56,7 @@ class LocalstorageCargo extends Cargo {
   }
 
   Future<int> length() {
-     Completer complete = new Completer();
-     complete.complete(values.length);
-     return complete.future;
+    return new Future.sync(() => values.length);
   }
 
   Map exportSync() {
@@ -68,9 +64,7 @@ class LocalstorageCargo extends Cargo {
   }
   
   Future<Map> export() {
-    Completer complete = new Completer();
-    complete.complete(values);
-    return complete.future;
+    return new Future.sync(() => values);
   }
 
   Future start() => _completer.future;
