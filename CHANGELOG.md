@@ -6,6 +6,7 @@ This file contains highlights of what changes on each version of the cargo packa
 
 - Add the key to the dataEvent object.
 - Add onAll method to CargoDispatcher
+- Add with CargoDispatcher to CargoBase and remove it from all Cargo classes
 
 #### Pub version 0.4.3 ####
 
