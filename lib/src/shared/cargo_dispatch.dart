@@ -38,15 +38,15 @@ class CargoDispatch {
   }
    
   dispatch(String key, value) {
+    DataEvent dataEvent = new DataEvent(key, value);
     if (mapping[key]!=null) {
       List<DataChangeListener> cargoDataChangerList = mapping[key];
       
-      DataEvent dataEvent = new DataEvent(key, value);
       for (DataChangeListener dataChangeListener in cargoDataChangerList) {
         dataChangeListener(dataEvent);
       }
-      if (this._cargoDataChange!=null) this._cargoDataChange(dataEvent);
     }
+    if (this._cargoDataChange!=null) this._cargoDataChange(dataEvent);
   }
   
 }

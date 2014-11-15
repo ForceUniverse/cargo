@@ -2,6 +2,10 @@
 
 This file contains highlights of what changes on each version of the cargo package.
 
+#### Pub version 0.4.4+1 ####
+
+- small adjustments when we fire an onAll event.
+
 #### Pub version 0.4.4 ####
 
 - Add the key to the dataEvent object.
