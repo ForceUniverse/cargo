@@ -50,6 +50,10 @@ Or remove all the listeners
 
 	cargo.offAll("userData");
 	
+You can also listen to all the data changes.
+
+  cargo.onAll((DataEvent de) => print(de));
+	
 These are the modes that you can use:
 
 Serverside:

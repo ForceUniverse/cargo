@@ -1,6 +1,6 @@
 part of cargo_server;
 
-abstract class Cargo extends CargoBase with CargoDispatch {
+abstract class Cargo extends CargoBase {
   Cargo._();
   /// Create a new cargo storage
   factory Cargo({CargoModeHolder MODE: CargoMode.MEMORY, conf}) {

@@ -1,6 +1,6 @@
 part of cargo;
 
-abstract class CargoBase {
+abstract class CargoBase extends Object with CargoDispatch {
   Completer _completer;
 
   /// Get an item synchronously
