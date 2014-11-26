@@ -45,6 +45,7 @@ class MemoryImpl extends CargoBase with CargoDispatch {
 
   void removeItem(String key) {
     values.remove(key);
+    dispatch_removed(key); 
   }
 
   void clear() {

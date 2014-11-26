@@ -7,8 +7,6 @@ class FileCargo extends Cargo {
 
   List<String> keys = new List<String>();
 
-  Map map;
-
   FileCargo(String dir) : super._() {
     pathToStore = Platform.script.resolve(dir).toFilePath();
     _completer = new Completer();
@@ -119,6 +117,7 @@ class FileCargo extends Cargo {
     var file = new File(uriKey.toFilePath());
 
     file.delete().then((File file) {
+      dispatch_removed(key);
       log.info("item $key deleted successfully");
     });
   }

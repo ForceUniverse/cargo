@@ -49,6 +49,7 @@ class LocalstorageCargo extends Cargo {
 
   void removeItem(String key) {
     values.remove(key);
+    dispatch_removed(key);
   }
 
   void clear() {

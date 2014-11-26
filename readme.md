@@ -53,6 +53,8 @@ Or remove all the listeners
 You can also listen to all the data changes.
 
   cargo.onAll((DataEvent de) => print(de));
+  
+A DataEvent consist out of a key, a value and a data type (changed, removed).
 	
 These are the modes that you can use:
 

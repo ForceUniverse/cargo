@@ -69,6 +69,8 @@ class IndexDbCargo extends Cargo {
     _doCommand((ObjectStore store) {
       store.delete(key);
       this.keys.remove(key);
+      
+      dispatch_removed(key); 
     });
   }
 
