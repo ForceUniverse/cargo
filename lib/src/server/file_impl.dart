@@ -4,26 +4,54 @@ class FileCargo extends Cargo {
   Completer _completer;
   final Logger log = new Logger('JsonStorage');
   String pathToStore;
-
+  String baseDir;
+  
   List<String> keys = new List<String>();
 
-  FileCargo(String dir) : super._() {
-    pathToStore = Platform.script.resolve(dir).toFilePath();
+  FileCargo(this.baseDir) : super._() {
+    _setNewStoreDir();
     _completer = new Completer();
 
-    _exists(pathToStore);
-
-    _readInKeys();
+    _readInKeys(_completer);
+  }
+  
+  void _setNewStoreDir() {
+    String dir = baseDir;
+    if (collection!= "") {
+      dir = "$dir/$collection/";
+    } else {
+      dir = "$dir/";
+    }
+    pathToStore = Platform.script.resolve(dir).toFilePath();
+    
+    if (!_exists(pathToStore)) {
+      Directory directory = new Directory(dir);
+      directory.createSync();
+    }
+  }
+  
+  Future withCollection(collection) {
+    this.collection = collection;
+    _setNewStoreDir();
+    
+    // reset keys
+    keys.clear();
+    Completer completer = new Completer();
+    _readInKeys(completer);
+    
+    return completer.future;
   }
 
-  void _exists(dir) {
+  bool _exists(dir) {
     try {
       if (!new Directory(dir).existsSync()) {
         log.severe("The '$dir' directory was not found.");
+        return false;
       }
     } on FileSystemException {
       log.severe("The '$dir' directory was not found.");
     }
+    return true;
   }
 
   dynamic getItemSync(String key, {defaultValue}) {
@@ -182,7 +210,7 @@ class FileCargo extends Cargo {
       return complete.future;
     }
 
-  void _readInKeys() {
+  void _readInKeys(Completer complete) {
     Directory dir = new Directory(pathToStore);
     dir.list(recursive: true, followLinks: false).listen((FileSystemEntity entity) {
       var path = entity.path;
@@ -193,7 +221,7 @@ class FileCargo extends Cargo {
         keys.add(fileName.toString());
       }
     }).onDone(() {
-      _completer.complete();
+      complete.complete();
     });
   }
 

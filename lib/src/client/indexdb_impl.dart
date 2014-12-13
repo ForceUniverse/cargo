@@ -2,8 +2,7 @@ part of cargo_client;
 
 class IndexDbCargo extends Cargo {
   String dbName;
-  String storeName;
-
+  
   bool _isOpen;
 
   int count = 0;
@@ -15,7 +14,9 @@ class IndexDbCargo extends Cargo {
 
   static Map<String, Database> _databases = new Map<String, Database>();
 
-  IndexDbCargo(this.dbName, this.storeName) : super._();
+  IndexDbCargo(this.dbName, storeName) : super._() {
+    this.collection = storeName;
+  }
 
   dynamic getItemSync(String key, {defaultValue}) {
     throw new UnsupportedError('IndexedDB is not supporting synchronous retrieval of data, we will add this feature when await key is available in Dart');
@@ -91,10 +92,27 @@ class IndexDbCargo extends Cargo {
 
   Future _doCommand(Future requestCommand(ObjectStore store), [String txnMode = 'readwrite']) {
     var completer = new Completer();
-    var trans = _db.transaction(storeName, txnMode);
-    var store = trans.objectStore(storeName);
+    var trans = _db.transaction(collection, txnMode);
+    var store = trans.objectStore(collection);
     var future = requestCommand(store);
     return trans.completed.then((_) => future);
+  }
+  
+  Future withCollection(collection) {
+    //print("Newly opened db $dbName has version ${db.version} and stores ${db.objectStoreNames}");
+    if (!_db.objectStoreNames.contains(collection)) {
+      _db.close();
+
+      print('Attempting upgrading $collection from ${_db.version}');
+
+      return window.indexedDB.open(dbName, version: 1, onUpgradeNeeded: (e) {
+        //print('Upgrading db $dbName to ${db.version + 1}');
+        Database d = e.target.result;
+        d.createObjectStore(collection);
+      }).then((Database db) {
+        //_db = db;
+      });
+    }
   }
 
   Future start() {
@@ -104,15 +122,15 @@ class IndexDbCargo extends Cargo {
 
     return window.indexedDB.open(dbName).then((Database db) {
       //print("Newly opened db $dbName has version ${db.version} and stores ${db.objectStoreNames}");
-      if (!db.objectStoreNames.contains(storeName)) {
+      if (!db.objectStoreNames.contains(collection)) {
         db.close();
 
-        print('Attempting upgrading $storeName from ${db.version}');
+        print('Attempting upgrading $collection from ${db.version}');
 
         return window.indexedDB.open(dbName, version: 1, onUpgradeNeeded: (e) {
           //print('Upgrading db $dbName to ${db.version + 1}');
           Database d = e.target.result;
-          d.createObjectStore(storeName);
+          d.createObjectStore(collection);
         });
       } else {
         //print('The store $storeName exists in $dbName');

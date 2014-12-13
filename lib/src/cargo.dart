@@ -3,6 +3,13 @@ part of cargo;
 abstract class CargoBase extends Object with CargoDispatch {
   Completer _completer;
 
+  String collection = "";
+  
+  Future withCollection(String collection) {
+    this.collection = collection;
+    return new Future.value();
+  }
+  
   /// Get an item synchronously
   dynamic getItemSync(String key, {defaultValue});
 

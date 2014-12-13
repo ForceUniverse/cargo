@@ -10,25 +10,38 @@ class LocalstorageCargo extends Cargo {
   }
 
   dynamic getItemSync(String key, {defaultValue}) {
+    key = "$collection$key";
+    
     _checkDefault(key, defaultValue: defaultValue);
     return values[key] is String ? JSON.decode(values[key]) : values[key];
   }
 
   void _checkDefault(String key, {defaultValue}) {
+    key = "$collection$key";
+    
     if (values[key] == null && defaultValue != null) {
       setItem(key, defaultValue);
     }
   }
 
   Future getItem(String key, {defaultValue}) {
+    key = "$collection$key";
+    
     return new Future.sync(getItemSync(key, defaultValue: defaultValue));
   }
 
   void setItem(String key, data) {
+    key = "$collection$key";
+    
+    _setItem(key, data);
+  }
+
+  void _setItem(String key, data) {
     values[key] = JSON.encode(data);
 
     dispatch(key, data);
   }
+
 
   void add(String key, data) {
     List list = new List();
@@ -44,10 +57,16 @@ class LocalstorageCargo extends Cargo {
   void _add(List list, String key, data) {
     list.add(data);
 
-    setItem(key, list);
+    _setItem(key, list);
   }
 
   void removeItem(String key) {
+    key = "$collection$key";
+        
+    _removeItem(key);
+  }
+  
+  void _removeItem(String key) {
     values.remove(key);
     dispatch_removed(key);
   }

@@ -2,11 +2,23 @@ part of cargo;
 
 class MemoryImpl extends CargoBase with CargoDispatch {
   Completer _completer;
+  Map global = new Map();
   Map values = new Map();
 
   MemoryImpl() {
     _completer = new Completer();
     _completer.complete();
+    
+    collection = "base";
+    global["base"] = values;
+  }
+  
+  Future withCollection(collection) {
+    if (global[collection]==null) {
+      global[collection] = new Map();
+    }
+    values = global[collection]; 
+    return new Future.value();
   }
 
   dynamic getItemSync(String key, {defaultValue}) {
