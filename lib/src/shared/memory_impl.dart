@@ -29,7 +29,8 @@ class MemoryImpl extends CargoBase with CargoDispatch {
   }
 
   Future getItem(String key, {defaultValue}) {
-    return new Future.sync(getItemSync(key, defaultValue: defaultValue));
+    var value = getItemSync(key, defaultValue: defaultValue);
+    return new Future.value(value);
   }
 
   void setItem(String key, data) {

@@ -6,6 +6,8 @@ class FileCargo extends Cargo {
   String pathToStore;
   String baseDir;
   
+  Map<String, Future> readStreams = new Map<String, Future>();
+  
   List<String> keys = new List<String>();
 
   FileCargo(this.baseDir) : super._() {
@@ -19,7 +21,7 @@ class FileCargo extends Cargo {
     String dir = baseDir;
     if (collection!= "") {
       dir = "$dir/$collection/";
-    } else {
+    } else if (!dir.endsWith("/")) {
       dir = "$dir/";
     }
     pathToStore = Platform.script.resolve(dir).toFilePath();
@@ -75,17 +77,24 @@ class FileCargo extends Cargo {
       var uriKey = new Uri.file(pathToStore).resolve("$key.json");
       var file = new File(uriKey.toFilePath());
 
-      file.exists().then((bool exist) {
-        // Need to convert it to json!
-        if (exist) {
-          file.readAsString().then((String fileValues) {
-            complete.complete(JSON.decode(fileValues));
-          });
-        } else {
+      // Need to convert it to json!
+      if (file.existsSync()) {
+          Stream stream = file.openRead();
+          
+          // create completer to close stream
+          Completer readStreamCompleter = new Completer();
+          readStreams[key] = readStreamCompleter.future;
+          stream
+              .transform(UTF8.decoder) // use a UTF8.decoder
+              .listen((String data) => complete.complete(JSON.decode(data)), // output the data
+              onDone: () { 
+                readStreamCompleter.complete();
+                print("Finished reading data");
+              });
+      } else {
           _setDefaultValue(key, defaultValue);
           complete.complete(defaultValue);
-        }
-      });
+      }
     } else {
       _setDefaultValue(key, defaultValue);
       complete.complete(defaultValue);
@@ -192,6 +201,9 @@ class FileCargo extends Cargo {
           file.deleteSync();
         } on Exception catch (e) {
           print('Unknown exception: $e');
+          var fileName = path.split('\\').last;
+          fileName = fileName.replaceAll(".json", '');
+          readStreams[fileName].then((_) => file.deleteSync());
         }
       }
     });
@@ -202,8 +214,11 @@ class FileCargo extends Cargo {
       Completer complete = new Completer();
       int count = 0;
       Directory dir = new Directory(pathToStore);
-      dir.list(recursive: true, followLinks: false).listen((FileSystemEntity entity) {
-         count++;
+      dir.list(recursive: false, followLinks: false).listen((FileSystemEntity entity) {
+        var path = entity.path;
+        if (path.indexOf(".json") > 1) { 
+            count++;
+        }
       }).onDone(() {
          complete.complete(count);
       });
