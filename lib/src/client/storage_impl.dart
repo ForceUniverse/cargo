@@ -27,7 +27,7 @@ class LocalstorageCargo extends Cargo {
   Future getItem(String key, {defaultValue}) {
     key = "$collection$key";
     
-    return new Future.sync(getItemSync(key, defaultValue: defaultValue));
+    return new Future.value(getItemSync(key, defaultValue: defaultValue));
   }
 
   void setItem(String key, data) {
@@ -76,7 +76,17 @@ class LocalstorageCargo extends Cargo {
   }
 
   Future<int> length() {
-    return new Future.sync(() => values.length);
+    int count = 0;
+    if (collection=="") {
+      count = values.length;
+    } else {
+      values.forEach((key, value) {
+        if (key.contains(collection)) {
+          count++;
+        }
+      });
+    }
+    return new Future.sync(() => count);
   }
 
   Map exportSync() {
