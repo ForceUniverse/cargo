@@ -1,6 +1,6 @@
 ## Cargo ##
 
-A small key value store for the server in analogy of html5 localstorage
+A small key value store abstraction that you can use on the server in analogy of html5 localstorage and also on the client.
 
 ### Simple usage ###
 
