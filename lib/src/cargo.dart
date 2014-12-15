@@ -10,6 +10,8 @@ abstract class CargoBase extends Object with CargoDispatch {
     return new Future.value();
   }
   
+  CargoBase instanceWithCollection(String collection);
+  
   /// Get an item synchronously
   dynamic getItemSync(String key, {defaultValue});
 

@@ -10,11 +10,29 @@ class FileCargo extends Cargo {
   
   List<String> keys = new List<String>();
 
-  FileCargo(this.baseDir) : super._() {
+  FileCargo(this.baseDir, {collection: ""}) : super._() {
+    this.collection = collection;
+    
     _setNewStoreDir();
     _completer = new Completer();
 
     _readInKeys(_completer);
+  }
+  
+  Future withCollection(collection) {
+      this.collection = collection;
+      _setNewStoreDir();
+      
+      // reset keys
+      keys.clear();
+      Completer completer = new Completer();
+      _readInKeys(completer);
+      
+      return completer.future;
+  }
+  
+  CargoBase instanceWithCollection(String collection) {
+    return new FileCargo(this.baseDir, collection: collection);
   }
   
   void _setNewStoreDir() {
@@ -30,18 +48,6 @@ class FileCargo extends Cargo {
       Directory directory = new Directory(dir);
       directory.createSync();
     }
-  }
-  
-  Future withCollection(collection) {
-    this.collection = collection;
-    _setNewStoreDir();
-    
-    // reset keys
-    keys.clear();
-    Completer completer = new Completer();
-    _readInKeys(completer);
-    
-    return completer.future;
   }
 
   bool _exists(dir) {

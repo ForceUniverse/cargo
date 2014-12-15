@@ -4,9 +4,14 @@ class LocalstorageCargo extends Cargo {
   Completer _completer;
   Storage values;
 
-  LocalstorageCargo(this.values) : super._() {
+  LocalstorageCargo(this.values, {collection: ""}) : super._() {
     _completer = new Completer();
     _completer.complete();
+    this.collection = collection;
+  }
+  
+  CargoBase instanceWithCollection(String collection) {
+      return new LocalstorageCargo(this.values, collection: collection);
   }
 
   dynamic getItemSync(String key, {defaultValue}) {

@@ -17,6 +17,10 @@ class IndexDbCargo extends Cargo {
   IndexDbCargo(this.dbName, storeName) : super._() {
     this.collection = storeName;
   }
+  
+  CargoBase instanceWithCollection(String collection) {
+    return new IndexDbCargo(this.dbName, collection);
+  }
 
   dynamic getItemSync(String key, {defaultValue}) {
     throw new UnsupportedError('IndexedDB is not supporting synchronous retrieval of data, we will add this feature when await key is available in Dart');

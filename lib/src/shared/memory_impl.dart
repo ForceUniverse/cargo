@@ -5,12 +5,15 @@ class MemoryImpl extends CargoBase with CargoDispatch {
   Map global = new Map();
   Map values = new Map();
 
-  MemoryImpl() {
+  MemoryImpl({collection: "base"}) {
     _completer = new Completer();
     _completer.complete();
     
-    collection = "base";
-    global["base"] = values;
+    global[collection] = values;
+  }
+  
+  CargoBase instanceWithCollection(String collection) {
+     return new MemoryImpl(collection: collection);
   }
   
   Future withCollection(collection) {
