@@ -17,7 +17,7 @@ abstract class CargoBase extends Object with CargoDispatch {
   Future getItem(String key, {defaultValue});
 
   /// Set/update an item synchronously
-  void setItem(String key, data);
+  Future setItem(String key, data);
 
   /// Add item synchronously
   void add(String key, data);

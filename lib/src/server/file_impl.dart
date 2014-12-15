@@ -109,7 +109,7 @@ class FileCargo extends Cargo {
     }
   }
 
-  void setItem(String key, data) {
+  Future setItem(String key, data) {
     var uriKey = new Uri.file(pathToStore).resolve("$key.json");
     var file = new File(uriKey.toFilePath());
 
@@ -123,6 +123,7 @@ class FileCargo extends Cargo {
       keys.add(key);
     }
     dispatch(key, data);
+    return new Future.value();
   }
 
   void add(String key, data) {

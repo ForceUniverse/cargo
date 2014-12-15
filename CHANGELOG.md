@@ -2,6 +2,11 @@
 
 This file contains highlights of what changes on each version of the cargo package.
 
+#### Pub version 0.5.0 ####
+
+- add collection switch
+- improve testing suite
+
 #### Pub version 0.4.5 ####
 
 - add DataType into DataEvent, so you can see if a data element is been changed or removed

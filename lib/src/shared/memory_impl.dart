@@ -33,10 +33,11 @@ class MemoryImpl extends CargoBase with CargoDispatch {
     return new Future.value(value);
   }
 
-  void setItem(String key, data) {
+  Future setItem(String key, data) {
     values[key] = data;
     
     dispatch(key, data);
+    return new Future.value();
   }
   
   void add(String key, data) {

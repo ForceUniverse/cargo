@@ -30,10 +30,11 @@ class LocalstorageCargo extends Cargo {
     return new Future.value(getItemSync(key, defaultValue: defaultValue));
   }
 
-  void setItem(String key, data) {
+  Future setItem(String key, data) {
     key = "$collection$key";
     
     _setItem(key, data);
+    return new Future.value();
   }
 
   void _setItem(String key, data) {
@@ -81,7 +82,7 @@ class LocalstorageCargo extends Cargo {
       count = values.length;
     } else {
       values.forEach((key, value) {
-        if (key.contains(collection)) {
+        if (key.startsWith(collection)) {
           count++;
         }
       });
