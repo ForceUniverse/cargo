@@ -6,6 +6,7 @@ This file contains highlights of what changes on each version of the cargo packa
 
 - add collection switch
 - improve testing suite
+- add method instanceWithCollection
 
 #### Pub version 0.4.5 ####
 
