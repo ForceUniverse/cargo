@@ -2,6 +2,10 @@
 
 This file contains highlights of what changes on each version of the cargo package.
 
+#### Pub version 0.5.0+2 ####
+
+- Fix dispatch local implementation
+
 #### Pub version 0.5.0+1 ####
 
 - Add possibility to define a collection in the constructor of cargo as optional.

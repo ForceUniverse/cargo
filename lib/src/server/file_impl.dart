@@ -128,7 +128,7 @@ class FileCargo extends Cargo {
     if (!keys.contains(key)) {
       keys.add(key);
     }
-    dispatch(key, data);
+    dispatch(key, collection, data);
     return new Future.value();
   }
 
@@ -161,7 +161,7 @@ class FileCargo extends Cargo {
     var file = new File(uriKey.toFilePath());
 
     file.delete().then((File file) {
-      dispatch_removed(key);
+      dispatch_removed(key, collection);
       log.info("item $key deleted successfully");
     });
   }

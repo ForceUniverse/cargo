@@ -36,16 +36,13 @@ class LocalstorageCargo extends Cargo {
   }
 
   Future setItem(String key, data) {
-    key = "$collection$key";
-    
-    _setItem(key, data);
+    _setItem("$collection$key", data);
+    dispatch(key, data);
     return new Future.value();
   }
 
   void _setItem(String key, data) {
     values[key] = JSON.encode(data);
-
-    dispatch(key, data);
   }
 
 
@@ -58,6 +55,7 @@ class LocalstorageCargo extends Cargo {
       }
     }
     _add(list, key, data);
+    dispatch(key, data);
   }
 
   void _add(List list, String key, data) {
@@ -67,14 +65,12 @@ class LocalstorageCargo extends Cargo {
   }
 
   void removeItem(String key) {
-    key = "$collection$key";
-        
-    _removeItem(key);
+    _removeItem("$collection$key");
+    dispatch_removed(key);
   }
   
   void _removeItem(String key) {
     values.remove(key);
-    dispatch_removed(key);
   }
 
   void clear() {

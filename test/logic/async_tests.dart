@@ -13,7 +13,7 @@ void runAsync(CargoBase storage, String name) {
    test('[$name] test async storage', () {
        schedule(() {
            Map asyncData = {"as": "go"};
-           storage["async_t"] = asyncData;
+
            return storage.setItem("async_t", asyncData).then((_) {
              return storage.getItem("async_t").then((value) 
                => expect(value, asyncData)
