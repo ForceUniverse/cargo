@@ -128,7 +128,7 @@ class FileCargo extends Cargo {
     if (!keys.contains(key)) {
       keys.add(key);
     }
-    dispatch(key, collection, data);
+    dispatch(key, data);
     return new Future.value();
   }
 
@@ -161,20 +161,20 @@ class FileCargo extends Cargo {
     var file = new File(uriKey.toFilePath());
 
     file.delete().then((File file) {
-      dispatch_removed(key, collection);
+      dispatch_removed(key);
       log.info("item $key deleted successfully");
     });
   }
 
-  Map exportSync() {
+  Map exportSync({Map params}) {
     Map values = new Map();
     for (var key in keys) {
-      values[key] = getItemSync(key);
+      values = _filter(values, params, key);
     }
     return values;
   }
   
-  Future<Map> export() {
+  Future<Map> export({Map params}) {
         Completer complete = new Completer();
         
         Map values = new Map();
@@ -188,7 +188,7 @@ class FileCargo extends Cargo {
             fileName = fileName.replaceAll(".json", '');
             var key = fileName.toString();
             
-            values[key] = getItemSync(key);
+            values = _filter(values, params, key);
           }
         }).onDone(() {
           complete.complete(values);
@@ -196,6 +196,20 @@ class FileCargo extends Cargo {
         return complete.future;
     }
 
+  Map _filter(Map values, Map params, key) {
+    var value = getItemSync(key);
+    if (value is Map) {
+        Map examen_value = value;
+                
+        if (containsByOverlay(examen_value, params)) {
+            values[key] = value;
+        }
+    } else {
+      values[key] = value;
+    }
+    return values;
+  }
+  
   void clear() {
     Directory dir = new Directory(pathToStore);
 

@@ -2,9 +2,16 @@
 
 This file contains highlights of what changes on each version of the cargo package.
 
+#### Pub version 0.5.1 ####
+
+- Export with query parameters, extend method with optional query parameters.
+  
+  Map exportSync({Map params});
+  Future<Map> export({Map params});
+
 #### Pub version 0.5.0+2 ####
 
-- Fix dispatch local implementation
+- Fix dispatch localstorage implementation
 
 #### Pub version 0.5.0+1 ####
 

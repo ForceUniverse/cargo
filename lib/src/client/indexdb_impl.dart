@@ -150,26 +150,40 @@ class IndexDbCargo extends Cargo {
         });
   }
 
-  Map exportSync() {
+  Map exportSync({Map params}) {
     Map values = new Map();
     for (var key in keys) {
-      values[key] = getItemSync(key);
+      var value = getItemSync(key);
+      values = _filter(values, params, key, value);
     }
     return values;
   }
   
-  Future<Map> export() {
+  Future<Map> export({Map params}) {
     Completer complete = new Completer();
     Map values = new Map();
     _doCommand((ObjectStore store) {
           store.openCursor().listen((CursorWithValue cwv) {
-            values[cwv.key] = cwv.value;
+            values = _filter(values, params, cwv.key, cwv.value);
           }).onDone(() {
             complete.complete(values);
           });;
         });
     return complete.future;
   }
+  
+  Map _filter(Map values, Map params, key, value) {
+     if (value is Map) {
+         Map examen_value = value;
+                 
+         if (containsByOverlay(examen_value, params)) {
+             values[key] = value;
+         }
+     } else {
+       values[key] = value;
+     }
+     return values;
+   }
 
   Database get _db => _databases[dbName];
 }
