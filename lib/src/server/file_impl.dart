@@ -8,7 +8,7 @@ class FileCargo extends Cargo {
   
   Map<String, Future> readStreams = new Map<String, Future>();
   
-  List<String> keys = new List<String>();
+  Set<String> keys = new Set<String>();
 
   FileCargo(this.baseDir, {collection: ""}) : super._() {
     this.collection = collection;
@@ -125,10 +125,9 @@ class FileCargo extends Cargo {
       file.createSync();
       _writeFile(file, key, data);
     }
-    if (!keys.contains(key)) {
-      keys.add(key);
-    }
+    keys.add(key);
     dispatch(key, data);
+    
     return new Future.value();
   }
 
@@ -169,7 +168,8 @@ class FileCargo extends Cargo {
   Map exportSync({Map params}) {
     Map values = new Map();
     for (var key in keys) {
-      values = _filter(values, params, key);
+      var value = getItemSync(key);
+      values = _filter(values, params, key, value);
     }
     return values;
   }
@@ -188,7 +188,8 @@ class FileCargo extends Cargo {
             fileName = fileName.replaceAll(".json", '');
             var key = fileName.toString();
             
-            values = _filter(values, params, key);
+            var value = getItemSync(key);
+            values = _filter(values, params, key, value);
           }
         }).onDone(() {
           complete.complete(values);
@@ -196,8 +197,7 @@ class FileCargo extends Cargo {
         return complete.future;
     }
 
-  Map _filter(Map values, Map params, key) {
-    var value = getItemSync(key);
+  Map _filter(Map values, Map params, key, value) {
     if (value is Map) {
         Map examen_value = value;
                 
