@@ -3,7 +3,12 @@ part of cargo;
 Map queryMap(Map values, Map params) {
   Map newValues = new Map();
   
-  values.forEach((key, value) {
+  for ( var key in values.keys) {
+        var value = values[key];
+    if (value is String) {
+      value = JSON.decode(value);
+    }
+        
     if (value is Map) {
       Map examen_value = value;
       
@@ -14,7 +19,7 @@ Map queryMap(Map values, Map params) {
       // use mirrors in the future
       newValues[key] = value;
     }
-  });
+  }
   return newValues;
 }
 
@@ -46,7 +51,8 @@ Map filterCollection(Map coll, collection) {
       for ( var key in coll.keys) {
             var value = coll[key];
             if (key.startsWith(collection)) {
-                newValues[key] = value;
+                String newKey = key.replaceAll(collection, '');
+                newValues[newKey] = value;
             } 
       }
       return newValues;

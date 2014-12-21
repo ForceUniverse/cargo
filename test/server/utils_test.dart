@@ -23,22 +23,22 @@ void main() {
   params2['date'] = date2;
   
   test('test contains positive', () {
-    expect(true, containsByOverlay(values['YO'], params));
+    expect(containsByOverlay(values['YO'], params), true);
   });
   
   test('test contains negative', () {
-    expect(false, containsByOverlay(values['YO'], params2));
+    expect(containsByOverlay(values['YO'], params2), false);
   });
   
   test('test query map', () {
     Map queryResult = queryMap(values, params2);
-    expect(2, queryResult.length);
-    expect("Uber", queryResult['Uber']['name']);
+    expect(queryResult.length, 2);
+    expect(queryResult['Uber']['name'], 'Uber');
   });
   
   test('test query map with params null', () {
       Map queryResult = queryMap(values, null);
-      expect(values.length, queryResult.length);
-      expect("Uber", queryResult['Uber']['name']);
+      expect(queryResult.length, values.length);
+      expect(queryResult['Uber']['name'], 'Uber');
   });
 }

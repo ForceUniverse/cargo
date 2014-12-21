@@ -31,8 +31,8 @@ void runExports(CargoBase storage, String name) {
                  return storage.setItem("Facebook", facebookData).then((_) {
                    return storage.setItem("Medium", mediumData).then((_) {
                       return storage.export(params: params).then((Map results) {
-                        expect(2, results.length);
-                        expect("Uber", results['Uber']['name']);
+                        expect(results.length, 2);
+                        expect(results['Uber']['name'], "Uber");
                       });                                            
                    });                           
                  });            

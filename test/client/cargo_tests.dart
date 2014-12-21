@@ -4,6 +4,7 @@ import 'package:cargo/cargo_client.dart';
 import '../logic/collection_tests.dart';
 import '../logic/normal_tests.dart';
 import '../logic/async_tests.dart';
+import '../logic/export_tests.dart';
 
 void main() {
   MemoryCargo storageMem = new Cargo(MODE: CargoMode.MEMORY);
@@ -19,8 +20,8 @@ void main() {
     run(storage, "localstorage");
   });
   
-  group('indexdb_normal', () {
-    runAsync(storageIndexDB, "indexdb");
+  group('indexeddb_normal', () {
+    runAsync(storageIndexDB, "indexedDB");
   });
   
   group('memory', () {    
@@ -30,6 +31,18 @@ void main() {
   group('localstorage', () {
     runCollection(storage, "localstorage");
   });
+  
+  group('memory exports', () {    
+    runExports(storageMem, "memory");
+  });
+      
+  group('localstorage exports', () {
+    runExports(storage, "localstorage");
+  });
+  
+  /*group('indexedDB exports', () {
+    runExports(storageIndexDB, "indexedDB");
+  });*/
   
   /*group('indexdb', () {
     runCollection(storage, "indexdb");

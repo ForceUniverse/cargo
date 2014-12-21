@@ -1,6 +1,7 @@
 library cargo;
 
 import 'dart:async';
+import 'dart:convert';
 
 part 'src/cargo.dart';
 part 'src/shared/memory_impl.dart';

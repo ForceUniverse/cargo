@@ -7,7 +7,7 @@ class IndexDbCargo extends Cargo {
 
   int count = 0;
 
-  List<String> keys = new List<String>();
+  Set<String> keys = new Set<String>();
 
   /// Returns true if IndexedDB is supported on this platform.
   static bool get supported => IdbFactory.supported;
