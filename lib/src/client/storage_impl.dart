@@ -73,8 +73,9 @@ class LocalstorageCargo extends Cargo {
     values.remove(key);
   }
 
-  void clear() {
+  Future clear() {
     values.clear();
+    return new Future.value();
   }
 
   Future<int> length() {

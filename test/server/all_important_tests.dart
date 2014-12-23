@@ -9,6 +9,8 @@ void main() {
   MemoryCargo storageMem = new Cargo(MODE: CargoMode.MEMORY);
   FileCargo storage = new Cargo(MODE: CargoMode.FILE, conf: {"path": "../store"});
 
+  FileCargo exports_storage = new Cargo(MODE: CargoMode.FILE, conf: {"path": "../store_exports"});
+  
   group('memory_normal', () {    
     run(storageMem, "memory");
   });
@@ -22,7 +24,7 @@ void main() {
   });
   
   group('file exports', () {
-    runExports(storage, "file");
+    runExports(exports_storage, "file");
   });
   
   group('memory', () {    

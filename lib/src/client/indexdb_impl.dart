@@ -86,8 +86,8 @@ class IndexDbCargo extends Cargo {
     });
   }
 
-  void clear() {
-    _doCommand((ObjectStore store) {
+  Future clear() {
+    return _doCommand((ObjectStore store) {
       store.clear();
       this.keys.clear();
     });

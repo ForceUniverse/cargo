@@ -28,7 +28,7 @@ abstract class CargoBase extends Object with CargoDispatch {
   void removeItem(String key);
 
   /// Clear cargo storage
-  void clear();
+  Future clear();
 
   /// Get the total number of items in cargo storage
   Future<int> length();

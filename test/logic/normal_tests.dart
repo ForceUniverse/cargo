@@ -4,10 +4,12 @@ import 'package:scheduled_test/scheduled_test.dart';
 import 'package:cargo/cargo_base.dart';
 
 void run(CargoBase storage, String name) {
-   setUp(() {
-          schedule(() {
-            return storage.start().then((_) => storage.clear());
-          });
+  setUp(() {
+            schedule(() {
+                return storage.start().then((_) { 
+                  return storage.clear();
+                });
+            });
    }); 
   
    test('[$name] test basic json storage', () {
@@ -31,4 +33,5 @@ void run(CargoBase storage, String name) {
            );
        });
    });
+   
 }

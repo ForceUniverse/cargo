@@ -2,6 +2,11 @@
 
 This file contains highlights of what changes on each version of the cargo package.
 
+#### Pub version 0.6.0 ####
+
+- Change return type of the clear() method, return a Future.
+- Fix encoding of special chars for the file implementation.
+
 #### Pub version 0.5.1 ####
 
 - Export with query parameters, extend method with optional query parameters.

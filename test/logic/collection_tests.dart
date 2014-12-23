@@ -1,13 +1,17 @@
 library collection_tests;
 
+import 'dart:async';
+
 import 'package:scheduled_test/scheduled_test.dart';
 import 'package:cargo/cargo_base.dart';
 
 void runCollection(CargoBase storage, String name) {
-   setUp(() {
-          schedule(() {
-            return storage.start().then((_) => storage.clear());
-          });
+  setUp(() {
+            schedule(() {
+                return storage.start().then((_) { 
+                  return storage.clear();
+                });
+            });
    }); 
   
    test('test basic $name storage', () {
@@ -40,17 +44,24 @@ void runCollection(CargoBase storage, String name) {
     test('test $name come back to collection switch', () {
       schedule(() {
           storage.withCollection("coll");  
-          storage.setItem("around", "world");  
+              return storage.setItem("around", "world").then((_) {
+                
+                storage.withCollection("another");
+                
+                return Future.wait([storage.setItem("bla", "bla"), storage.setItem("bla2", "data")]).then((_) {
+                    storage.length().then((int count) { 
+                      
+                        expect(count, 2);
+                        
+                        storage.withCollection("coll");  
+                        
+                        return storage.length().then((int count) => expect(count, 1));
+                    });
+                    
+                });           
+                
+          });  
         
-          storage.withCollection("another");
-          storage.setItem("bla", "bla");
-          storage.setItem("bla2", "data");
-          
-          storage.length().then((int count) => expect(count, 2));
-          
-          storage.withCollection("coll");      
-          
-          return storage.length().then((int count) => expect(count, 1));
         });
     });
 }

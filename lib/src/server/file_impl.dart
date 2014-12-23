@@ -39,7 +39,8 @@ class FileCargo extends Cargo {
     String dir = baseDir;
     if (collection!= "") {
       dir = "$dir/$collection/";
-    } else if (!dir.endsWith("/")) {
+    } 
+    if (!dir.endsWith("/")) {
       dir = "$dir/";
     }
     pathToStore = Platform.script.resolve(dir).toFilePath();
@@ -61,26 +62,28 @@ class FileCargo extends Cargo {
     }
     return true;
   }
-
+  
   dynamic getItemSync(String key, {defaultValue}) {
     if (keys.contains(key)) {
-      var uriKey = new Uri.file(pathToStore).resolve("$key.json");
-      var file = new File(uriKey.toFilePath());
+          var encodedPath = Uri.encodeComponent("$key.json");
+          var uriKey = new Uri.file("$pathToStore$encodedPath");
+          var file = new File(uriKey.toFilePath());
 
-      if (file.existsSync()) {
-        // need to convert it to json!
-        return JSON.decode(file.readAsStringSync());
-      }
-    }
-    _setDefaultValue(key, defaultValue);
-    return defaultValue;
+          if (file.existsSync()) {
+            // need to convert it to json!
+            return JSON.decode(file.readAsStringSync());
+          }
+     }
+     _setDefaultValue(key, defaultValue);
+     return defaultValue;
   }
 
   Future getItem(String key, {defaultValue}) {
     Completer complete = new Completer();
-
+    
     if (keys.contains(key)) {
-      var uriKey = new Uri.file(pathToStore).resolve("$key.json");
+      var encodedPath = Uri.encodeComponent("$key.json");
+      var uriKey = new Uri.file("$pathToStore$encodedPath");
       var file = new File(uriKey.toFilePath());
 
       // Need to convert it to json!
@@ -116,7 +119,8 @@ class FileCargo extends Cargo {
   }
 
   Future setItem(String key, data) {
-    var uriKey = new Uri.file(pathToStore).resolve("$key.json");
+    var encodedPath = Uri.encodeComponent("$key.json");
+    var uriKey = new Uri.file("$pathToStore$encodedPath");
     var file = new File(uriKey.toFilePath());
 
     if (file.existsSync()) {
@@ -156,7 +160,8 @@ class FileCargo extends Cargo {
   }
 
   void removeItem(String key) {
-    var uriKey = new Uri.file(pathToStore).resolve("$key.json");
+    var encodedPath = Uri.encodeComponent("$key.json");
+    var uriKey = new Uri.file("$pathToStore$encodedPath");
     var file = new File(uriKey.toFilePath());
 
     file.delete().then((File file) {
@@ -189,7 +194,7 @@ class FileCargo extends Cargo {
             var key = fileName.toString();
             
             var value = getItemSync(key);
-            values = _filter(values, params, key, value);
+            values = _filter(values, params, Uri.decodeFull(key), value);
           }
         }).onDone(() {
           complete.complete(values);
@@ -210,9 +215,10 @@ class FileCargo extends Cargo {
     return values;
   }
   
-  void clear() {
+  Future clear() {
     Directory dir = new Directory(pathToStore);
-
+    Completer complete = new Completer();
+    
     dir.list(recursive: true, followLinks: false).listen((FileSystemEntity entity) {
       var path = entity.path;
       if (path.indexOf(".json") > 1) {
@@ -227,8 +233,11 @@ class FileCargo extends Cargo {
           readStreams[fileName].then((_) => file.deleteSync());
         }
       }
+    }).onDone(() {
+      keys.clear();
+      complete.complete();
     });
-    keys.clear();
+    return complete.future;
   }
 
   Future<int> length() {
@@ -254,6 +263,7 @@ class FileCargo extends Cargo {
       if (path.indexOf(".json") > 1) {
         var fileName = path.split('\\').last;
         fileName = fileName.replaceAll(".json", '');
+        
         keys.add(fileName.toString());
       }
     }).onDone(() {

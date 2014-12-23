@@ -3,13 +3,17 @@ library export_tests;
 import 'package:scheduled_test/scheduled_test.dart';
 import 'package:cargo/cargo_base.dart';
 
+import 'dart:async';
+
 var date1 = {'day': 19, 'month': 12, 'year': 2014};
 var date2 = {'day': 21, 'month': 12, 'year': 2014};
 
 void runExports(CargoBase storage, String name) {
    setUp(() {
           schedule(() {
-            return storage.start().then((_) => storage.clear());
+              return storage.start().then((_) { 
+                return storage.clear();
+              });
           });
    }); 
 
@@ -25,20 +29,19 @@ void runExports(CargoBase storage, String name) {
            params['point'] = 1;
            params['date'] = date2;
            
-           return storage.setItem("YO", yoData).then((_) {
-             return storage.setItem("Uber", uberData).then((_) {
-               return storage.setItem("SnapChat", snapChatData).then((_) {
-                 return storage.setItem("Facebook", facebookData).then((_) {
-                   return storage.setItem("Medium", mediumData).then((_) {
+           wrapFuture(Future.wait([storage.setItem("YO", yoData),
+                        storage.setItem("Uber", uberData),
+                        storage.setItem("SnapChat", snapChatData),
+                        storage.setItem("Facebook", facebookData),
+                        storage.setItem("Medium", mediumData)]).then((_) {
+             
                       return storage.export(params: params).then((Map results) {
-                        expect(results.length, 2);
-                        expect(results['Uber']['name'], "Uber");
-                      });                                            
-                   });                           
-                 });            
-               });
-             });
-           });
+                             expect(results.length, 2);
+                             expect(results['Uber']['name'], "Uber");
+                             return new Future.value();
+                      });
+           }));
+           
        });
    });
 }

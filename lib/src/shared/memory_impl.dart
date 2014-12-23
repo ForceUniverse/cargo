@@ -65,8 +65,9 @@ class MemoryImpl extends CargoBase with CargoDispatch {
     dispatch_removed(key); 
   }
 
-  void clear() {
+  Future clear() {
     values.clear();
+    return new Future.value();
   }
 
   Future<int> length() {
