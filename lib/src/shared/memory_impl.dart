@@ -74,12 +74,25 @@ class MemoryImpl extends CargoBase with CargoDispatch {
     return new Future.sync(() => values.length);
   }
   
-  Map exportSync({Map params}) {
-    return queryMap(values, params);
+  Map exportSync({Map params, Options options}) {
+    return lookAtOptions(queryMap(values, params), options);
   } 
   
-  Future<Map> export({Map params}) {
-    return new Future.sync(() => queryMap(values, params));
+  Future<Map> export({Map params, Options options}) {
+    return new Future.sync(() => exportSync(params: params, options: options));
+  }
+  
+  Map lookAtOptions(Map map, Options options) {
+    Map returnValues = new Map();
+    if (options != null && options.limit!=-1) {
+        var keys = map.keys.take(options.limit);
+        for (var key in keys) {
+          returnValues[key] = map[key];
+        }
+    } else {
+      returnValues = map;
+    }
+    return returnValues;
   }
 
   Future start() => _completer.future;

@@ -41,9 +41,9 @@ abstract class CargoBase extends Object with CargoDispatch {
     return getItemSync(key);
   }
 
-  Map exportSync({Map params});
+  Map exportSync({Map params, Options options});
   
-  Future<Map> export({Map params});
+  Future<Map> export({Map params, Options options});
 
   CargoBase copyTo(CargoBase storage) {
     this.exportSync().forEach((key, value) => storage.add(key, value));

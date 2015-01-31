@@ -170,22 +170,26 @@ class FileCargo extends Cargo {
     });
   }
 
-  Map exportSync({Map params}) {
+  Map exportSync({Map params, Options options}) {
     Map values = new Map();
-    for (var key in keys) {
+    Set<String> keysSortedOut = sortOutKeys(options);
+    for (var key in keysSortedOut) {
       var value = getItemSync(key);
       values = _filter(values, params, key, value);
     }
     return values;
   }
   
-  Future<Map> export({Map params}) {
+  Future<Map> export({Map params, Options options}) {
         Completer complete = new Completer();
         
         Map values = new Map();
         
         Directory dir = new Directory(pathToStore);
-        dir.list(recursive: true, followLinks: false).listen((FileSystemEntity entity) {
+        
+        Stream files = dir.list(recursive: true, followLinks: false);
+        
+        files.listen((FileSystemEntity entity) {
           var path = entity.path;
 
           if (path.indexOf(".json") > 1) {
@@ -193,11 +197,15 @@ class FileCargo extends Cargo {
             fileName = fileName.replaceAll(".json", '');
             var key = fileName.toString();
             
-            var value = getItemSync(key);
-            values = _filter(values, params, Uri.decodeFull(key), value);
+            if (!(options != null 
+                    && options.hasLimit() 
+                    && values.length==options.limit)) {
+              var value = getItemSync(key);
+              values = _filter(values, params, Uri.decodeFull(key), value);
+            }
           }
         }).onDone(() {
-          complete.complete(values);
+           complete.complete(values);
         });
         return complete.future;
     }
@@ -214,6 +222,13 @@ class FileCargo extends Cargo {
     }
     return values;
   }
+  
+  Iterable sortOutKeys(Options options) {
+      if (options != null && options.limit!=-1) {
+          return keys.take(options.limit);
+      } 
+      return keys;
+    }
   
   Future clear() {
     Directory dir = new Directory(pathToStore);

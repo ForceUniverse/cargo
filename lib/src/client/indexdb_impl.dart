@@ -150,7 +150,7 @@ class IndexDbCargo extends Cargo {
         });
   }
 
-  Map exportSync({Map params}) {
+  Map exportSync({Map params, Options options}) {
     Map values = new Map();
     for (var key in keys) {
       var value = getItemSync(key);
@@ -159,7 +159,7 @@ class IndexDbCargo extends Cargo {
     return values;
   }
   
-  Future<Map> export({Map params}) {
+  Future<Map> export({Map params, Options options}) {
     Completer complete = new Completer();
     Map values = new Map();
     _doCommand((ObjectStore store) {
