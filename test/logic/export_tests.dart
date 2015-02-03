@@ -44,4 +44,23 @@ void runExports(CargoBase storage, String name) {
        });
    });
    
+   test('[$name] test options export of the storage', () {
+         schedule(() {
+                Options options = new Options(3);
+                
+                wrapFuture(Future.wait([storage.setItem("YO", yoData),
+                                            storage.setItem("Uber", uberData),
+                                            storage.setItem("SnapChat", snapChatData),
+                                            storage.setItem("Facebook", facebookData),
+                                            storage.setItem("Medium", mediumData)])).then((_) {
+                  
+                           return storage.export(options: options).then((Map results) {
+                                  print(results);     
+                                  expect(results.length, 3);
+                                  return new Future.value();
+                           });
+                });
+         });
+   });
+   
 }

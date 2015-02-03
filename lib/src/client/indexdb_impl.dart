@@ -152,18 +152,31 @@ class IndexDbCargo extends Cargo {
 
   Map exportSync({Map params, Options options}) {
     Map values = new Map();
-    for (var key in keys) {
+    Set<String> keysSortedOut = sortOutKeys(options);
+    for (var key in keysSortedOut) {
       var value = getItemSync(key);
       values = _filter(values, params, key, value);
     }
     return values;
   }
   
+  Iterable sortOutKeys(Options options) {
+     if (options != null && options.limit!=-1) {
+         return keys.take(options.limit);
+     } 
+     return keys;
+  }
+  
   Future<Map> export({Map params, Options options}) {
     Completer complete = new Completer();
     Map values = new Map();
     _doCommand((ObjectStore store) {
-          store.openCursor().listen((CursorWithValue cwv) {
+          Stream<CursorWithValue> openCursor = store.openCursor();
+          if (options!=null && options.hasLimit()) {
+              openCursor = openCursor.take(options.limit);
+          }
+          
+          openCursor.listen((CursorWithValue cwv) {
             values = _filter(values, params, cwv.key, cwv.value);
           }).onDone(() {
             complete.complete(values);

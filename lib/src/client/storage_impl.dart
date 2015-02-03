@@ -93,11 +93,11 @@ class LocalstorageCargo extends Cargo {
   }
 
   Map exportSync({Map params, Options options}) {
-     return queryMap(filterCollection(values, collection), params);
+     return lookAtOptions(queryMap(filterCollection(values, collection), params), options);
   } 
     
   Future<Map> export({Map params, Options options}) {
-    return new Future.sync(() => queryMap(filterCollection(values, collection), params));
+     return new Future.sync(() => exportSync(params: params, options: options));
   }
 
   Future start() => _completer.future;

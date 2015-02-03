@@ -23,6 +23,19 @@ Map queryMap(Map values, Map params) {
   return newValues;
 }
 
+Map lookAtOptions(Map map, Options options) {
+    Map returnValues = new Map();
+    if (options != null && options.limit!=-1) {
+        var keys = map.keys.take(options.limit);
+        for (var key in keys) {
+          returnValues[key] = map[key];
+        }
+    } else {
+      returnValues = map;
+    }
+    return returnValues;
+  }
+
 bool containsByOverlay(Map examen_values, Map params) {
      bool maps_correct = true; 
      
