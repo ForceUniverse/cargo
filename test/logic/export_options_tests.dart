@@ -25,7 +25,7 @@ void runExportsOptions(CargoBase storage, String name) {
      
      test('[$name] test options export of the storage', () {
          schedule(() {
-             Options options = new Options(3);
+             Options options = new Options(limit: 3);
              
              wrapFuture(Future.wait([storage.setItem("YO", yoData),
                                          storage.setItem("Uber", uberData),

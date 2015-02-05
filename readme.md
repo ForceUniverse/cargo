@@ -79,6 +79,20 @@ When you want to copy some data from one cargo implentation to another you can u
 	cargo.copyTo(anotherCargoImpl);
 	
 You can also export the data to a map with the functions export and exportSync.
+
+You can add parameters, to export only that data that falls under these rules.
+
+  Map params = new Map();
+  params['point'] = 1;
+  params['date'] = date2;
+
+  cargo.export(params: params);
+  
+It is also possible to provide some options to the export.
+
+  Options options = new Options(limit: 3);
+  
+  cargo.export(options: options);
 	
 ### Note ###
 
