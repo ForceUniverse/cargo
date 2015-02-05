@@ -2,6 +2,10 @@
 
 This file contains highlights of what changes on each version of the cargo package.
 
+#### Pub version 0.7.0 ####
+
+- Adding Options in the export methods, first usecase is limiting your export to a certain amount of results
+
 #### Pub version 0.6.0 ####
 
 - Change return type of the clear() method, return a Future.
