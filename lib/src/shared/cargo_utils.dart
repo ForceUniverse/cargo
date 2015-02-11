@@ -25,16 +25,31 @@ Map queryMap(Map values, Map params) {
 
 Map lookAtOptions(Map map, Options options) {
     Map returnValues = new Map();
-    if (options != null && options.limit!=-1) {
+    if (options != null) {
+      if (options.revert) {
+        map = revertMap(map);
+      }
+      if (options.hasLimit()) {
         var keys = map.keys.take(options.limit);
         for (var key in keys) {
           returnValues[key] = map[key];
         }
+      }
     } else {
       returnValues = map;
     }
     return returnValues;
+}
+
+Map revertMap(Map map) {
+  Map revertedMap = new Map();
+  var keys = map.keys;
+  for (var j=map.length; j>=0; j--){
+    var key = keys.elementAt(j);
+    revertedMap[key] = map[key];
   }
+  return revertedMap;
+}
 
 bool containsByOverlay(Map examen_values, Map params) {
      bool maps_correct = true; 
