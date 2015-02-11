@@ -172,12 +172,9 @@ class IndexDbCargo extends Cargo {
     Map values = new Map();
     _doCommand((ObjectStore store) {
           Stream<CursorWithValue> openCursor = store.openCursor();
-          if (options!=null && options.hasLimit()) {
-              openCursor = openCursor.take(options.limit);
-          }
           
           openCursor.listen((CursorWithValue cwv) {
-            values = _filter(values, params, cwv.key, cwv.value);
+              values = lookAtOptions(_filter(values, params, cwv.key, cwv.value), options);
           }).onDone(() {
             complete.complete(values);
           });;
