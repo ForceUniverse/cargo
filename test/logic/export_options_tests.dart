@@ -25,7 +25,7 @@ void runExportsOptions(CargoBase storage, String name) {
      
      test('[$name] test options export of the storage', () {
          schedule(() {
-             Options options = new Options(limit: 3);
+             Options options = new Options(limit: 2, revert: true);
              
              wrapFuture(Future.wait([storage.setItem("YO", yoData),
                                          storage.setItem("Uber", uberData),
@@ -33,9 +33,9 @@ void runExportsOptions(CargoBase storage, String name) {
                                          storage.setItem("Facebook", facebookData),
                                          storage.setItem("Medium", mediumData)])).then((_) {
                
-                        return storage.export(options: options).then((Map results) {
-                               print(results);     
-                               expect(results.length, 3);
+                        return storage.export(options: options).then((Map results) {    
+                               expect(results.length, 2);
+                               expect(results['Medium']['name'], "Medium");
                                return new Future.value();
                         });
              });

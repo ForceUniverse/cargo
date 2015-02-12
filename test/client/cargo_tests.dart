@@ -5,6 +5,7 @@ import '../logic/collection_tests.dart';
 import '../logic/normal_tests.dart';
 import '../logic/async_tests.dart';
 import '../logic/export_tests.dart';
+import '../logic/export_options_tests.dart';
 
 void main() {
   MemoryCargo storageMem = new Cargo(MODE: CargoMode.MEMORY);
@@ -38,6 +39,14 @@ void main() {
       
   group('localstorage exports', () {
     runExports(storage, "localstorage");
+  });
+  
+  group('memory exports options', () {    
+    runExportsOptions(storageMem, "memory");
+  });
+        
+  group('localstorage exports options', () {
+    runExportsOptions(storage, "localstorage");
   });
   
   /*group('indexedDB exports', () {

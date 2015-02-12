@@ -32,9 +32,9 @@ void main() {
     runExportsOptions(storageMem, "memory");
   });
     
-  group('file exports options', () {
+  /*group('file exports options', () {
     runExportsOptions(exports_storage, "file");
-  });
+  });*/
   
   group('memory', () {    
     runCollection(storageMem, "memory");

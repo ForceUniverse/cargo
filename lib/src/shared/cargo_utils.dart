@@ -44,7 +44,7 @@ Map lookAtOptions(Map map, Options options) {
 Map revertMap(Map map) {
   Map revertedMap = new Map();
   var keys = map.keys;
-  for (var j=map.length; j>=0; j--){
+  for (var j=map.length-1; j>=0; j--){
     var key = keys.elementAt(j);
     revertedMap[key] = map[key];
   }
