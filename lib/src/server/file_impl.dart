@@ -238,10 +238,19 @@ class FileCargo extends Cargo {
   }
   
   Iterable sortOutKeys(Options options) {
-      if (options != null && options.limit!=-1) {
-          return keys.take(options.limit);
+      Set retKeys = keys;
+      if (options != null) { 
+        if (options.revert) {
+          retKeys.clear();
+          for (var j=keys.length-1; j>=0; j--){
+              retKeys.add(keys.elementAt(j));
+          }
+        }
+        if (options.hasLimit()) {
+          retKeys = retKeys.take(options.limit);
+        }
       } 
-      return keys;
+      return retKeys;
     }
   
   Future clear() {
