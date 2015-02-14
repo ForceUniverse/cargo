@@ -285,19 +285,28 @@ class FileCargo extends Cargo {
     }
 
   void _readInKeys(Completer complete) {
-    Directory dir = new Directory(pathToStore);
-    dir.list(recursive: true, followLinks: false).listen((FileSystemEntity entity) {
-      var path = entity.path;
+    var encodedPath = Uri.encodeComponent("keys_of_collection.index");
+    var uriKey = new Uri.file("$pathToStore$encodedPath");
+    var file = new File(uriKey.toFilePath());
 
-      if (path.indexOf(".json") > 1) {
-        var fileName = path.split('\\').last;
-        fileName = fileName.replaceAll(".json", '');
+    // Need to convert it to json!
+    if (file.existsSync()) {
+        Stream stream = file.openRead();
+              
+        // create completer to close stream
+        Completer readStreamCompleter = new Completer();
         
-        keys.add(fileName.toString());
-      }
-    }).onDone(() {
-      complete.complete();
-    });
+              stream
+                  .transform(UTF8.decoder) // use a UTF8.decoder
+                  .listen((String data) {
+                List dataKeys = JSON.decode(data); // output the data
+                
+                keys = dataKeys.toSet();
+              },
+                  onDone: () { 
+                    complete.complete();
+                  });
+          }
   }
 
   Future start() => _completer.future;
