@@ -121,18 +121,23 @@ class FileCargo extends Cargo {
   Future setItem(String key, data) {
     var encodedPath = Uri.encodeComponent("$key.json");
     var uriKey = new Uri.file("$pathToStore$encodedPath");
-    var file = new File(uriKey.toFilePath());
 
-    if (file.existsSync()) {
-      _writeFile(file, key, data);
-    } else {
-      file.createSync();
-      _writeFile(file, key, data);
-    }
-    keys.add(key);
+    _writeFileWithCheck(new File(uriKey.toFilePath()), data);
+    _addToKeys(key);
+    
     dispatch(key, data);
     
     return new Future.value();
+  }
+  
+  _addToKeys(key) {
+    keys.add(key);
+    
+    // save keys
+    var encodedPath = Uri.encodeComponent("keys_of_collection.index");
+    var uriKey = new Uri.file("$pathToStore$encodedPath");
+    
+    _writeFileWithCheck(new File(uriKey.toFilePath()), keys.toList());
   }
 
   void add(String key, data) {
@@ -155,7 +160,16 @@ class FileCargo extends Cargo {
     setItem(key, list);
   }
 
-  void _writeFile(File file, key, data) {
+  void _writeFileWithCheck(File file, data) {
+    if (file.existsSync()) {
+       _writeFile(file, data);
+    } else {
+       file.createSync();
+       _writeFile(file, data);
+    }
+  }
+  
+  void _writeFile(File file, data) {
     file.writeAsStringSync(JSON.encode(data));
   }
 
