@@ -37,6 +37,8 @@ class LocalstorageCargo extends Cargo {
 
   Future setItem(String key, data) {
     _setItem("$collection$key", data);
+    
+    add("${collection}keys_of_collection", "$collection$key");
     dispatch(key, data);
     return new Future.value();
   }
@@ -81,10 +83,10 @@ class LocalstorageCargo extends Cargo {
   Future<int> length() {
     int count = 0;
     if (collection=="") {
-      count = values.length;
+      count = values.length - 1;
     } else {
       values.forEach((key, value) {
-        if (key.startsWith(collection)) {
+        if (key.startsWith(collection) && key != "${collection}keys_of_collection") {
           count++;
         }
       });
@@ -93,7 +95,7 @@ class LocalstorageCargo extends Cargo {
   }
 
   Map exportSync({Map params, Options options}) {
-     return lookAtOptions(queryMap(filterCollection(values, collection), params), options);
+     return lookAtOptions(queryMap(filterCollection(values, collection, keys: getItemSync("keys_of_collection")), params), options);
   } 
     
   Future<Map> export({Map params, Options options}) {

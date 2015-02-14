@@ -73,10 +73,11 @@ bool containsByOverlay(Map examen_values, Map params) {
      return maps_correct;
 }
 
-Map filterCollection(Map coll, collection) {
+Map filterCollection(Map coll, collection, {keys}) {
     if (collection!=null) {
       Map newValues = new Map();
-      for ( var key in coll.keys) {
+      if (keys==null) keys = coll.keys;
+      for ( var key in keys ) {
             var value = coll[key];
             if (key.startsWith(collection)) {
                 String newKey = key.replaceAll(collection, '');
