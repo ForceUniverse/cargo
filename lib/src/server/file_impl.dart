@@ -186,7 +186,7 @@ class FileCargo extends Cargo {
 
   Map exportSync({Map params, Options options}) {
     Map values = new Map();
-    Set<String> keysSortedOut = sortOutKeys(options);
+    Iterable keysSortedOut = sortOutKeys(options);
     for (var key in keysSortedOut) {
       var value = getItemSync(key);
       values = _filter(values, params, key, value);
@@ -195,34 +195,9 @@ class FileCargo extends Cargo {
   }
   
   Future<Map> export({Map params, Options options}) {
-        Completer complete = new Completer();
-        
-        Map values = new Map();
-        
-        Directory dir = new Directory(pathToStore);
-        
-        Stream files = dir.list(recursive: true, followLinks: false);
-        
-        files.listen((FileSystemEntity entity) {
-          var path = entity.path;
-
-          if (path.indexOf(".json") > 1) {
-            var fileName = path.split('\\').last;
-            fileName = fileName.replaceAll(".json", '');
-            var key = fileName.toString();
-            
-            if (!(options != null 
-                    && options.hasLimit() 
-                    && values.length==options.limit)) {
-              var value = getItemSync(key);
-              values = _filter(values, params, Uri.decodeFull(key), value);
-            }
-          }
-        }).onDone(() {
-           complete.complete(values);
-        });
-        return complete.future;
-    }
+    // TODO: look at a sync approach
+    return new Future.sync(() => exportSync(params: params, options: options));
+  }
 
   Map _filter(Map values, Map params, key, value) {
     if (value is Map) {
@@ -238,19 +213,16 @@ class FileCargo extends Cargo {
   }
   
   Iterable sortOutKeys(Options options) {
-      Set retKeys = keys;
+      Iterable retKeys = keys.toList();
       if (options != null) { 
         if (options.revert) {
-          retKeys.clear();
-          for (var j=keys.length-1; j>=0; j--){
-              retKeys.add(keys.elementAt(j));
-          }
+          retKeys = keys.toList().reversed;
         }
         if (options.hasLimit()) {
           retKeys = retKeys.take(options.limit);
         }
       } 
-      return retKeys;
+      return retKeys.toSet();
     }
   
   Future clear() {
@@ -305,7 +277,7 @@ class FileCargo extends Cargo {
         // create completer to close stream
         Completer readStreamCompleter = new Completer();
         
-              stream
+        stream
                   .transform(UTF8.decoder) // use a UTF8.decoder
                   .listen((String data) {
                 List dataKeys = JSON.decode(data); // output the data
