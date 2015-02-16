@@ -4,7 +4,6 @@ import 'package:cargo/cargo_server.dart';
 import '../logic/collection_tests.dart';
 import '../logic/normal_tests.dart';
 import '../logic/export_tests.dart';
-import '../logic/export_options_tests.dart';
 
 void main() {
   MemoryCargo storageMem = new Cargo(MODE: CargoMode.MEMORY);
@@ -27,14 +26,6 @@ void main() {
   group('file exports', () {
     runExports(exports_storage, "file");
   });
-  
-  group('memory exports options', () {
-    runExportsOptions(storageMem, "memory");
-  });
-    
-  /*group('file exports options', () {
-    runExportsOptions(exports_storage, "file");
-  });*/
   
   group('memory', () {    
     runCollection(storageMem, "memory");
