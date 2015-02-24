@@ -2,6 +2,10 @@
 
 This file contains highlights of what changes on each version of the cargo package.
 
+#### Pub version 0.7.1+2 ####
+
+- Fix an issue with the localstorage implementation having a list also dispatched as updated data
+
 #### Pub version 0.7.1+1 ####
 
 - Add extra check in options when asking if it hasLimit

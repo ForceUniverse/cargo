@@ -38,7 +38,7 @@ class LocalstorageCargo extends Cargo {
   Future setItem(String key, data) {
     _setItem("$collection$key", data);
     
-    add("${collection}keys_of_collection", "$collection$key");
+    _add("${collection}keys_of_collection", "$collection$key");
     dispatch(key, data);
     return new Future.value();
   }
@@ -47,20 +47,19 @@ class LocalstorageCargo extends Cargo {
     values[key] = JSON.encode(data);
   }
 
-
   void add(String key, data) {
-    List list = new List();
-    if (values.containsKey(key)) {
-      Object obj = JSON.decode(values[key]);
-      if (obj is List) {
-        list = JSON.decode(values[key]);
-      }
-    }
-    _add(list, key, data);
+    _add(key, data);
     dispatch(key, data);
   }
 
-  void _add(List list, String key, data) {
+  void _add(String key, data) {
+    List list = new List();
+    if (values.containsKey(key)) {
+       Object obj = JSON.decode(values[key]);
+       if (obj is List) {
+           list = JSON.decode(values[key]);
+       }
+    }
     list.add(data);
 
     _setItem(key, list);
