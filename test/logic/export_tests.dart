@@ -74,6 +74,7 @@ void runExports(CargoBase storage, String name) {
                                             storage.setItem("Medium", mediumData)])).then((_) {
                   
                            return storage.export(options: options).then((Map results) {    
+                                  print(results);
                                   expect(results.length, 2);
                                   expect(results['Medium']['name'], "Medium");
                                   return new Future.value();

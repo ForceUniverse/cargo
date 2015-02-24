@@ -6,5 +6,5 @@ class Options {
   
   Options({this.limit, this.revert: false});
   
-  bool hasLimit() => limit != -1;
+  bool hasLimit() => limit != null && limit != -1;
 }

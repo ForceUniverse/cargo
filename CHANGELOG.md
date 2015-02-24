@@ -2,6 +2,10 @@
 
 This file contains highlights of what changes on each version of the cargo package.
 
+#### Pub version 0.7.1+1 ####
+
+- Add extra check in options when asking if it hasLimit
+
 #### Pub version 0.7.1 ####
 
 - Adding Options revert to cargo, so we can export a list and revert it in its order
