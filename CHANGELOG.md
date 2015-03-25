@@ -2,6 +2,10 @@
 
 This file contains highlights of what changes on each version of the cargo package.
 
+#### Pub version 0.7.1+3 ####
+
+- Fix issue with parsing json on querymap functionality
+
 #### Pub version 0.7.1+2 ####
 
 - Fix an issue with the localstorage implementation having a list also dispatched as updated data
