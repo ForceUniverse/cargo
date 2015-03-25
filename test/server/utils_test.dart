@@ -41,4 +41,14 @@ void main() {
       expect(queryResult.length, values.length);
       expect(queryResult['Uber']['name'], 'Uber');
   });
+  
+  Map map = new Map();
+  map["qsdf"] = "bla";
+  map["qsdf2"] = "bla\n\n";
+  map["qsdf3"] = "";
+  
+  test('test query map with params null', () {
+        Map queryResult = queryMap(map, null);
+        expect(queryResult.length, map.length);
+    });
 }
