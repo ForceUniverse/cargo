@@ -26,23 +26,22 @@ class IndexDbCargo extends Cargo {
     throw new UnsupportedError('IndexedDB is not supporting synchronous retrieval of data, we will add this feature when await key is available in Dart');
   }
 
-  Future getItem(String key, {defaultValue}) {
-    Completer complete = new Completer();
-    
-    _doCommand((ObjectStore store) {
-      store.getObject(key).then((obj) {
-        if (obj == null) {
-           if (defaultValue != null) {
-              setItem(key, defaultValue);
-           }
-           return complete.complete(defaultValue);
-        } else {
-          complete.complete(obj);
-        }
-      });
+  Future getItem(String key, {defaultValue}) async {
+    return _doCommand((ObjectStore store) {
+        return _getItemAsync(store, key, defaultValue: defaultValue);
     }, 'readonly');
-    
-    return complete.future;
+  }
+  
+  Future _getItemAsync(ObjectStore store, String key, {defaultValue}) async {
+      var obj = await store.getObject(key);
+      if (obj == null) {
+          if (defaultValue != null) {
+              setItem(key, defaultValue);
+          }
+          return defaultValue;
+     } else {
+          return obj;
+     }
   }
 
   Future setItem(String key, data) {
@@ -100,13 +99,14 @@ class IndexDbCargo extends Cargo {
         });
     return future;
   }
-
-  Future _doCommand(Future requestCommand(ObjectStore store), [String txnMode = 'readwrite']) {
-    var completer = new Completer();
-    var trans = _db.transaction(collection, txnMode);
-    var store = trans.objectStore(collection);
-    var future = requestCommand(store);
-    return trans.completed.then((_) => future);
+  
+  Future _doCommand(Future requestCommand(ObjectStore store),
+               [String txnMode = 'readwrite']) async {
+      var trans = _db.transaction(collection, txnMode);
+      var store = trans.objectStore(collection);
+      var result = await requestCommand(store);
+      await trans.completed;
+      return result;
   }
   
   Future withCollection(collection) {
@@ -115,7 +115,7 @@ class IndexDbCargo extends Cargo {
     return start();
   }
 
-  Future start() {
+  Future start() async {
     if (!supported) {
           return new Future.error(
             new UnsupportedError('IndexedDB is not supported on this platform'));
@@ -125,29 +125,23 @@ class IndexDbCargo extends Cargo {
           _db.close();
         }
         
-        return window.indexedDB.open(dbName)
-        .then((Database db) {
-          //print("Newly opened db $dbName has version ${db.version} and stores ${db.objectStoreNames}");
-          if (!db.objectStoreNames.contains(collection)) {
-            db.close();
-            //print('Attempting upgrading $storeName from ${db.version}');
-            return window.indexedDB.open(dbName, version: db.version + 1,
-              onUpgradeNeeded: (e) {
-                print('Upgrading db $dbName to ${db.version + 1}');
-                Database d = e.target.result;
-                d.createObjectStore(collection);
-              }
-            );
-          } else {
-            //print('The store $storeName exists in $dbName');
-            return db;
-          }
-        })
-        .then((db){
-          _databases[dbName] = db;
-          _isOpen = true;
-          return true;
-        });
+        Database db = await window.indexedDB.open(dbName);
+        //print("Newly opened db $dbName has version ${db.version} and stores ${db.objectStoreNames}");
+        if (!db.objectStoreNames.contains(collection)) {
+             db.close();
+             //print('Attempting upgrading $storeName from ${db.version}');
+             db = await window.indexedDB.open(dbName, version: db.version + 1,
+             onUpgradeNeeded: (e) {
+                  print('Upgrading db $dbName to ${db.version + 1}');
+                  Database d = e.target.result;
+                  d.createObjectStore(collection);
+                }
+              );
+        }
+        
+        _databases[dbName] = db;
+        _isOpen = true;
+        return true;
   }
 
   Map exportSync({Map params, Options options}) {
