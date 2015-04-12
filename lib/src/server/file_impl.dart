@@ -1,7 +1,6 @@
 part of cargo_server;
 
 class FileCargo extends Cargo {
-  Completer _completer;
   final Logger log = new Logger('JsonStorage');
   String pathToStore;
   String baseDir;
@@ -14,21 +13,13 @@ class FileCargo extends Cargo {
     this.collection = collection;
     
     _setNewStoreDir();
-    _completer = new Completer();
-
-    _readInKeys(_completer);
   }
   
-  Future withCollection(collection) {
+  Future withCollection(collection) async {
       this.collection = collection;
       _setNewStoreDir();
       
-      // reset keys
-      keys.clear();
-      Completer completer = new Completer();
-      _readInKeys(completer);
-      
-      return completer.future;
+      return await _readInKeys();
   }
   
   CargoBase instanceWithCollection(String collection) {
@@ -46,9 +37,10 @@ class FileCargo extends Cargo {
     pathToStore = Platform.script.resolve(dir).toFilePath();
     
     if (!_exists(pathToStore)) {
-      Directory directory = new Directory(dir);
+      Directory directory = new Directory(pathToStore);
       directory.createSync();
     }
+    log.info("new path to store $pathToStore");
   }
 
   bool _exists(dir) {
@@ -78,8 +70,8 @@ class FileCargo extends Cargo {
      return defaultValue;
   }
 
-  Future getItem(String key, {defaultValue}) {
-    Completer complete = new Completer();
+  Future _getItem(String key, {defaultValue}) async {
+    var result;
     
     if (keys.contains(key)) {
       var encodedPath = Uri.encodeComponent("$key.json");
@@ -91,25 +83,24 @@ class FileCargo extends Cargo {
           Stream stream = file.openRead();
           
           // create completer to close stream
-          Completer readStreamCompleter = new Completer();
-          readStreams[key] = readStreamCompleter.future;
-          stream
-              .transform(UTF8.decoder) // use a UTF8.decoder
-              .listen((String data) => complete.complete(JSON.decode(data)), // output the data
-              onDone: () { 
-                readStreamCompleter.complete();
-                print("Finished reading data");
-              });
+          await for (String data in stream
+              .transform(UTF8.decoder))  {
+            result = JSON.decode(data);
+          } // output the data
       } else {
           _setDefaultValue(key, defaultValue);
-          complete.complete(defaultValue);
       }
     } else {
       _setDefaultValue(key, defaultValue);
-      complete.complete(defaultValue);
     }
 
-    return complete.future;
+    return result;
+  }
+  
+  Future getItem(String key, {defaultValue}) {
+    Future value = _getItem(key, defaultValue: defaultValue);
+    readStreams[key] = value;
+    return value;
   }
 
   void _setDefaultValue(String key, defaultValue) {
@@ -225,70 +216,66 @@ class FileCargo extends Cargo {
       return retKeys.toSet();
     }
   
-  Future clear() {
-    Directory dir = new Directory(pathToStore);
-    Completer complete = new Completer();
-    
-    dir.list(recursive: true, followLinks: false).listen((FileSystemEntity entity) {
-      var path = entity.path;
-      if (path.indexOf(".json") > 1) {
+  Future clear() async {
+    Stream files = _files();
+    await for (FileSystemEntity entity in files) {
+        var path = entity.path;
         log.info("deleting $path");
         var file = new File(path);
+        
         try {
-          file.deleteSync();
+            file.deleteSync();
         } on Exception catch (e) {
-          print('Unknown exception: $e');
-          var fileName = path.split('\\').last;
-          fileName = fileName.replaceAll(".json", '');
-          readStreams[fileName].then((_) => file.deleteSync());
-        }
-      }
-    }).onDone(() {
-      keys.clear();
-      complete.complete();
-    });
-    return complete.future;
+            print('Unknown exception: $e');
+            var fileName = path.split('\\').last;
+            fileName = fileName.replaceAll(".json", '');
+            readStreams[fileName].then((_) => file.deleteSync());
+        }       
+    }
+    
+    keys.clear();
   }
 
-  Future<int> length() {
-      Completer complete = new Completer();
-      int count = 0;
-      Directory dir = new Directory(pathToStore);
-      dir.list(recursive: false, followLinks: false).listen((FileSystemEntity entity) {
-        var path = entity.path;
-        if (path.indexOf(".json") > 1) { 
-            count++;
-        }
-      }).onDone(() {
-         complete.complete(count);
-      });
-      return complete.future;
+  Future<int> length() async {
+      Stream files = _files();
+      return await files.length;
+  }
+  
+  Stream<FileSystemEntity> _files() async* {
+    Directory dir = new Directory(pathToStore);
+    bool exists = await dir.exists();
+    if (exists) {
+      await for (FileSystemEntity entity in dir.list(recursive: false, followLinks: false)) {
+          var path = entity.path;
+          if (path.indexOf(".json") > 1) { 
+              yield entity;
+          }
+      }
     }
+  }
 
-  void _readInKeys(Completer complete) {
+  Future _readInKeys() async {
     var encodedPath = Uri.encodeComponent("keys_of_collection.index");
     var uriKey = new Uri.file("$pathToStore$encodedPath");
     var file = new File(uriKey.toFilePath());
+    
+    // reset keys
+    keys.clear();
 
     // Need to convert it to json!
     if (file.existsSync()) {
         Stream stream = file.openRead();
               
-        // create completer to close stream
-        Completer readStreamCompleter = new Completer();
-        
-        stream
-                  .transform(UTF8.decoder) // use a UTF8.decoder
-                  .listen((String data) {
+        await for(String data in stream
+                  .transform(UTF8.decoder)) {
                 List dataKeys = JSON.decode(data); // output the data
-                
                 keys = dataKeys.toSet();
-              },
-                  onDone: () { 
-                    complete.complete();
-                  });
-          }
+        }
+    }
+    return keys;
   }
 
-  Future start() => _completer.future;
+  Future start() async {
+    return await _readInKeys();
+  }
 }

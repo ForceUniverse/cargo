@@ -28,16 +28,17 @@ void runCollection(CargoBase storage, String name) {
 
     test('test $name collection switch', () {
       schedule(() {
-        storage.withCollection("coll");
+        return storage.withCollection("coll").then((_) {
         
-        storage.setItem("around", "world");
-        
-        var data = storage.getItemSync("data");
-        expect(data, null);
-        var around = storage.getItemSync("around");
-        expect(around, "world");
-        
-        return storage.length().then((int count) => expect(count, 1));
+          storage.setItem("around", "world");
+          
+          var data = storage.getItemSync("data");
+          expect(data, null);
+          var around = storage.getItemSync("around");
+          expect(around, "world");
+          
+          return storage.length().then((int count) => expect(count, 1));
+        });
       });
     });
 
@@ -46,20 +47,20 @@ void runCollection(CargoBase storage, String name) {
           storage.withCollection("coll");  
               return storage.setItem("around", "world").then((_) {
                 
-                storage.withCollection("another");
+                return storage.withCollection("another").then((_) {
                 
-                return Future.wait([storage.setItem("bla", "bla"), storage.setItem("bla2", "data")]).then((_) {
-                    storage.length().then((int count) { 
-                      
-                        expect(count, 2);
+                    return Future.wait([storage.setItem("bla", "bla"), storage.setItem("bla2", "data")]).then((_) {
+                        storage.length().then((int count) { 
+                          
+                            expect(count, 2);
+                            
+                            storage.withCollection("coll");  
+                            
+                            return storage.length().then((int count) => expect(count, 1));
+                        });
                         
-                        storage.withCollection("coll");  
-                        
-                        return storage.length().then((int count) => expect(count, 1));
-                    });
-                    
-                });           
-                
+                    });           
+                });
           });  
         
         });
