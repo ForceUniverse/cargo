@@ -4,6 +4,7 @@ import 'package:cargo/cargo_server.dart';
 import '../logic/collection_tests.dart';
 import '../logic/normal_tests.dart';
 import '../logic/export_tests.dart';
+import '../logic/clear_tests.dart';
 
 void main() {
   MemoryCargo storageMem = new Cargo(MODE: CargoMode.MEMORY);
@@ -34,4 +35,5 @@ void main() {
   group('file', () {
     runCollection(storage, "file");
   });
+  
 }

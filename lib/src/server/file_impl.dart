@@ -125,10 +125,7 @@ class FileCargo extends Cargo {
     keys.add(key);
     
     // save keys
-    var encodedPath = Uri.encodeComponent("keys_of_collection.index");
-    var uriKey = new Uri.file("$pathToStore$encodedPath");
-    
-    _writeFileWithCheck(new File(uriKey.toFilePath()), keys.toList());
+    _writeFileWithCheck(_keys_of_collection_file(), keys.toList());
   }
 
   void add(String key, data) {
@@ -155,6 +152,9 @@ class FileCargo extends Cargo {
     if (file.existsSync()) {
        _writeFile(file, data);
     } else {
+       if (file.parent.existsSync()) {
+         file.parent.createSync();
+       }
        file.createSync();
        _writeFile(file, data);
     }
@@ -217,23 +217,27 @@ class FileCargo extends Cargo {
     }
   
   Future clear() async {
-    Stream files = _files();
-    await for (FileSystemEntity entity in files) {
-        var path = entity.path;
-        log.info("deleting $path");
-        var file = new File(path);
-        
-        try {
-            file.deleteSync();
-        } on Exception catch (e) {
-            print('Unknown exception: $e');
-            var fileName = path.split('\\').last;
-            fileName = fileName.replaceAll(".json", '');
-            readStreams[fileName].then((_) => file.deleteSync());
-        }       
+    Directory dir = new Directory(pathToStore);
+    bool exists = await dir.exists();
+    if (exists) {
+        await for (FileSystemEntity entity in dir.list(recursive: false, followLinks: false)) {
+          if (entity.existsSync()) { 
+            try {
+                await entity.delete(recursive: true);
+             } catch (e) {
+                var fileName = entity.path.split('\\').last;
+                fileName = fileName.replaceAll(".json", '');
+                if (readStreams[fileName] != null) {
+                  await readStreams[fileName];
+                  await entity.delete();
+                }
+             }
+          }
+        }
     }
     
     keys.clear();
+    // _writeFileWithCheck(_keys_of_collection_file(), keys.toList());
   }
 
   Future<int> length() async {
@@ -242,22 +246,22 @@ class FileCargo extends Cargo {
   }
   
   Stream<FileSystemEntity> _files() async* {
-    Directory dir = new Directory(pathToStore);
-    bool exists = await dir.exists();
-    if (exists) {
-      await for (FileSystemEntity entity in dir.list(recursive: false, followLinks: false)) {
-          var path = entity.path;
-          if (path.indexOf(".json") > 1) { 
-              yield entity;
-          }
+    try {
+      Directory dir = new Directory(pathToStore);
+      bool exists = await dir.exists();
+      if (exists) {
+        await for (FileSystemEntity entity in dir.list(recursive: false, followLinks: false)) {
+            var path = entity.path;
+            if (path.indexOf(".json") > 1) {
+                yield entity;
+            }
+        }
       }
-    }
+    } catch (e) { }
   }
 
   Future _readInKeys() async {
-    var encodedPath = Uri.encodeComponent("keys_of_collection.index");
-    var uriKey = new Uri.file("$pathToStore$encodedPath");
-    var file = new File(uriKey.toFilePath());
+    var file = _keys_of_collection_file();
     
     // reset keys
     keys.clear();
@@ -275,6 +279,12 @@ class FileCargo extends Cargo {
     return keys;
   }
 
+  File _keys_of_collection_file() {
+    var encodedPath = Uri.encodeComponent("keys_of_collection.index");
+    var uriKey = new Uri.file("$pathToStore$encodedPath");
+    return new File(uriKey.toFilePath());
+  }
+  
   Future start() async {
     return await _readInKeys();
   }
