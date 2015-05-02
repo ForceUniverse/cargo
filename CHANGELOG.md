@@ -2,6 +2,10 @@
 
 This file contains highlights of what changes on each version of the cargo package.
 
+#### Pub version 0.7.2 ####
+
+- Simplify code with async/await
+
 #### Pub version 0.7.1+3 ####
 
 - Fix issue with parsing json on querymap functionality
