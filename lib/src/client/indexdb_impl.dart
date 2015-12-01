@@ -23,7 +23,7 @@ class IndexDbCargo extends Cargo {
   }
 
   dynamic getItemSync(String key, {defaultValue}) {
-    throw new UnsupportedError('IndexedDB is not supporting synchronous retrieval of data, we will add this feature when await key is available in Dart');
+    throw new UnsupportedError('IndexedDB is not supporting synchronous retrieval of data, we will add this feature when we can make getItem sync, we will try sync');
   }
 
   Future getItem(String key, {defaultValue}) async {

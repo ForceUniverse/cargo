@@ -1,4 +1,5 @@
 # Dart excludes
+.packages
 packages
 .project
 .children
