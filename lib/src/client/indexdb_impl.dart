@@ -23,7 +23,7 @@ class IndexDbCargo extends Cargo {
   }
 
   dynamic getItemSync(String key, {defaultValue}) {
-    throw new UnsupportedError('IndexedDB is not supporting synchronous retrieval of data');
+    throw new UnsupportedError('IndexedDB is not supporting synchronous retrieval of data!');
   }
 
   Future getItem(String key, {defaultValue}) async {
