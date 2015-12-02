@@ -4,7 +4,7 @@ author: Joris Hermans <hermansj@gmail.com>
 description: A 'key value' storage abstraction library for dart
 homepage: https://github.com/ForceUniverse/cargo
 dependencies:
-  logging: '>=0.11.0 <0.13.0'
+  logging: '>=0.11.0 <0.12.0'
 dev_dependencies:
   scheduled_test: ">=0.11.6 <0.12.0"
 environment:
